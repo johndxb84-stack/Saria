@@ -108,7 +108,11 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div className="mt-6 text-center text-sm">
+          <div className="mt-4 text-center text-sm">
+            <Link to="/forgot-password" className="text-primary-600 hover:text-primary-700">Forgot your password?</Link>
+          </div>
+
+          <div className="mt-4 text-center text-sm">
             <span className="text-gray-500">New patient? </span>
             <Link to="/register" className="text-primary-600 font-semibold hover:text-primary-700">Register for portal access</Link>
           </div>

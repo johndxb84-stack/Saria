@@ -238,7 +238,45 @@ export async function sendDeactivationNotification(patient: {
   });
 }
 
-// ─── 5. Patient → Account Reactivated ────────────────────────────────────────
+// ─── 5. Password Reset ────────────────────────────────────────────────────────
+
+export async function sendPasswordResetEmail(user: {
+  first_name: string; email: string;
+}, resetUrl: string): Promise<void> {
+  if (!process.env.RESEND_API_KEY) return;
+
+  const html = layout(`
+    <h2 style="margin:0 0 8px;color:#111827;font-size:20px;font-weight:700;">Reset Your Password</h2>
+    <p style="margin:0 0 20px;color:#374151;font-size:14px;line-height:1.7;">
+      Dear <strong>${user.first_name}</strong>,<br/>
+      We received a request to reset your password. Click the button below to choose a new one.
+      This link expires in <strong>1 hour</strong>.
+    </p>
+
+    ${button('Reset Password', resetUrl, '#2563eb')}
+
+    <div style="background:#fef9c3;border:1px solid #fde68a;border-radius:10px;padding:16px;margin-top:8px;">
+      <p style="margin:0;color:#92400e;font-size:13px;line-height:1.6;">
+        If you did not request a password reset, you can safely ignore this email.
+        Your password will not change.
+      </p>
+    </div>
+
+    ${divider()}
+    <p style="margin:0;color:#9ca3af;font-size:12px;text-align:center;">
+      Account email: <strong>${user.email}</strong>
+    </p>
+  `);
+
+  await resend.emails.send({
+    from: FROM,
+    to: user.email,
+    subject: 'Reset Your Password — Dr. Saria El Hachem Patient Portal',
+    html,
+  });
+}
+
+// ─── 6. Patient → Account Reactivated ────────────────────────────────────────
 
 export async function sendReactivationNotification(patient: {
   first_name: string; last_name: string; email: string;
