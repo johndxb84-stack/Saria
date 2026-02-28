@@ -22,6 +22,18 @@ export default function Navbar() {
 
   const isActive = (path: string) => location.pathname === path;
 
+  const scrollToSection = (sectionId: string) => {
+    setMobileOpen(false);
+    if (location.pathname === '/') {
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      navigate('/');
+      setTimeout(() => {
+        document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+      }, 300);
+    }
+  };
+
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -42,12 +54,12 @@ export default function Navbar() {
             <Link to="/" className={`px-3 py-2 text-sm rounded-lg font-medium transition-colors ${isActive('/') ? 'bg-primary-50 text-primary-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}`}>
               About
             </Link>
-            <Link to="/#services" className="px-3 py-2 text-sm rounded-lg font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors">
+            <button onClick={() => scrollToSection('services')} className="px-3 py-2 text-sm rounded-lg font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors">
               Services
-            </Link>
-            <Link to="/#contact" className="px-3 py-2 text-sm rounded-lg font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors">
+            </button>
+            <button onClick={() => scrollToSection('contact')} className="px-3 py-2 text-sm rounded-lg font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors">
               Contact
-            </Link>
+            </button>
 
             {user ? (
               <div className="flex items-center gap-2 ml-4">
@@ -137,6 +149,8 @@ export default function Navbar() {
       {mobileOpen && (
         <div className="md:hidden border-t border-gray-100 bg-white px-4 py-3 space-y-1">
           <Link to="/" className="block px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-gray-50" onClick={() => setMobileOpen(false)}>About</Link>
+          <button onClick={() => scrollToSection('services')} className="w-full text-left px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-gray-50">Services</button>
+          <button onClick={() => scrollToSection('contact')} className="w-full text-left px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-gray-50">Contact</button>
           {user ? (
             <>
               <Link to={dashboardPath} className="block px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-gray-50" onClick={() => setMobileOpen(false)}>Dashboard</Link>

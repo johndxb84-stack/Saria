@@ -105,7 +105,7 @@ export default function HomePage() {
             </div>
             <div className="space-y-4">
               {[
-                { icon: GraduationCap, title: 'Medical Education', desc: 'MD — USEK University, Lebanon · Residency at American University of Beirut (AUB)', color: 'bg-blue-50 text-blue-600' },
+                { icon: GraduationCap, title: 'Medical Education', desc: 'MD - Family Medicine at American University of Beirut (AUB)', color: 'bg-blue-50 text-blue-600' },
                 { icon: Award, title: 'Oxford Certification', desc: 'CBT-E for Eating Disorders — University of Oxford (CREDO), UK', color: 'bg-orange-50 text-orange-600' },
                 { icon: Shield, title: 'Board Certification', desc: 'Family Medicine Board Certified · DHA Licensed', color: 'bg-green-50 text-green-600' },
                 { icon: Briefcase, title: 'Clinical Experience', desc: '15+ years in Family & Community Medicine', color: 'bg-purple-50 text-purple-600' },
