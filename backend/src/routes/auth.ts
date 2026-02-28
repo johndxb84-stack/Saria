@@ -172,6 +172,15 @@ router.post('/forgot-password', async (req: Request, res: Response): Promise<voi
   const genericMessage = 'If an account exists for that email, a reset link has been sent.';
 
   try {
+    // Ensure the table exists (failsafe if initializeSchema missed it)
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS password_reset_tokens (
+        token TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL,
+        expires_at TIMESTAMPTZ NOT NULL
+      )
+    `);
+
     const result = await pool.query(
       'SELECT id, first_name, email FROM users WHERE email = $1 AND is_active = 1',
       [email.toLowerCase().trim()]
@@ -193,7 +202,7 @@ router.post('/forgot-password', async (req: Request, res: Response): Promise<voi
 
     await pool.query(
       'INSERT INTO password_reset_tokens (token, user_id, expires_at) VALUES ($1, $2, $3)',
-      [token, user.id, expiresAt.toISOString()]
+      [token, user.id, expiresAt]
     );
 
     const portalUrl = process.env.FRONTEND_URL || 'https://drsariaelhachem.com';
@@ -217,6 +226,14 @@ router.post('/reset-password', async (req: Request, res: Response): Promise<void
   }
 
   try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS password_reset_tokens (
+        token TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL,
+        expires_at TIMESTAMPTZ NOT NULL
+      )
+    `);
+
     const result = await pool.query(
       'SELECT token, user_id, expires_at FROM password_reset_tokens WHERE token = $1',
       [token]
