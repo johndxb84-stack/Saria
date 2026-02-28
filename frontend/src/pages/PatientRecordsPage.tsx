@@ -78,13 +78,16 @@ export default function PatientRecordsPage() {
     return matchSearch && matchType;
   });
 
-  const handleDownload = (fileId: string, fileName: string) => {
+  const handleDownload = async (fileId: string, fileName: string) => {
+    const response = await api.get(`/files/download/${fileId}`, { responseType: 'blob' });
+    const url = window.URL.createObjectURL(new Blob([response.data]));
     const link = document.createElement('a');
-    link.href = `/api/files/download/${fileId}`;
+    link.href = url;
     link.setAttribute('download', fileName);
     document.body.appendChild(link);
     link.click();
     link.remove();
+    window.URL.revokeObjectURL(url);
   };
 
   const formatFileSize = (bytes: number) => {

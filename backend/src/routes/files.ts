@@ -86,31 +86,6 @@ router.post('/upload', requireRole('doctor', 'nurse'), upload.single('file'), as
   }
 });
 
-// GET /api/files/:patientId - List all files for a patient
-router.get('/:patientId', auditLog('view_files'), async (req: AuthRequest, res: Response): Promise<void> => {
-  const { patientId } = req.params;
-  if (req.user!.role === 'patient' && req.user!.id !== patientId) {
-    res.status(403).json({ error: 'Access denied' });
-    return;
-  }
-  try {
-    const result = await pool.query(`
-      SELECT f.id, f.original_name, f.file_category, f.description, f.file_size, f.mime_type,
-             f.created_at, f.record_id, r.title as record_title,
-             u.first_name || ' ' || u.last_name as uploaded_by_name
-      FROM files f
-      LEFT JOIN medical_records r ON f.record_id = r.id
-      JOIN users u ON f.uploaded_by = u.id
-      WHERE f.patient_id = $1
-      ORDER BY f.created_at DESC
-    `, [patientId]);
-    res.json(result.rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to fetch files' });
-  }
-});
-
 // GET /api/files/download/:fileId - Download a file
 router.get('/download/:fileId', auditLog('download_file'), async (req: AuthRequest, res: Response): Promise<void> => {
   try {
@@ -138,6 +113,31 @@ router.get('/download/:fileId', auditLog('download_file'), async (req: AuthReque
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to download file' });
+  }
+});
+
+// GET /api/files/:patientId - List all files for a patient
+router.get('/:patientId', auditLog('view_files'), async (req: AuthRequest, res: Response): Promise<void> => {
+  const { patientId } = req.params;
+  if (req.user!.role === 'patient' && req.user!.id !== patientId) {
+    res.status(403).json({ error: 'Access denied' });
+    return;
+  }
+  try {
+    const result = await pool.query(`
+      SELECT f.id, f.original_name, f.file_category, f.description, f.file_size, f.mime_type,
+             f.created_at, f.record_id, r.title as record_title,
+             u.first_name || ' ' || u.last_name as uploaded_by_name
+      FROM files f
+      LEFT JOIN medical_records r ON f.record_id = r.id
+      JOIN users u ON f.uploaded_by = u.id
+      WHERE f.patient_id = $1
+      ORDER BY f.created_at DESC
+    `, [patientId]);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch files' });
   }
 });
 
