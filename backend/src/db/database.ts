@@ -1,26 +1,14 @@
-import Database from 'better-sqlite3';
-import path from 'path';
+import { Pool } from 'pg';
 import bcrypt from 'bcryptjs';
+import { v4 as uuidv4 } from 'uuid';
 
-const DB_PATH = process.env.DB_PATH || path.join(__dirname, '../../database.sqlite');
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+});
 
-let db: Database.Database;
-
-export function getDb(): Database.Database {
-  if (!db) {
-    db = new Database(DB_PATH);
-    db.pragma('journal_mode = WAL');
-    db.pragma('foreign_keys = ON');
-    initializeSchema();
-  }
-  return db;
-}
-
-function initializeSchema(): void {
-  const database = db;
-
-  // Users table (patients, nurses, doctor)
-  database.exec(`
+export async function initializeSchema(): Promise<void> {
+  await pool.query(`
     CREATE TABLE IF NOT EXISTS users (
       id TEXT PRIMARY KEY,
       email TEXT UNIQUE NOT NULL,
@@ -36,13 +24,12 @@ function initializeSchema(): void {
       emergency_phone TEXT,
       is_active INTEGER NOT NULL DEFAULT 1,
       approved INTEGER NOT NULL DEFAULT 0,
-      created_at TEXT NOT NULL DEFAULT (datetime('now')),
-      updated_at TEXT NOT NULL DEFAULT (datetime('now'))
-    );
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
   `);
 
-  // Medical records table
-  database.exec(`
+  await pool.query(`
     CREATE TABLE IF NOT EXISTS medical_records (
       id TEXT PRIMARY KEY,
       patient_id TEXT NOT NULL,
@@ -52,15 +39,14 @@ function initializeSchema(): void {
       description TEXT,
       date TEXT NOT NULL,
       is_confidential INTEGER NOT NULL DEFAULT 0,
-      created_at TEXT NOT NULL DEFAULT (datetime('now')),
-      updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       FOREIGN KEY (patient_id) REFERENCES users(id),
       FOREIGN KEY (created_by) REFERENCES users(id)
-    );
+    )
   `);
 
-  // Blood results table
-  database.exec(`
+  await pool.query(`
     CREATE TABLE IF NOT EXISTS blood_results (
       id TEXT PRIMARY KEY,
       record_id TEXT NOT NULL,
@@ -73,11 +59,10 @@ function initializeSchema(): void {
       notes TEXT,
       FOREIGN KEY (record_id) REFERENCES medical_records(id) ON DELETE CASCADE,
       FOREIGN KEY (patient_id) REFERENCES users(id)
-    );
+    )
   `);
 
-  // Files table (X-rays, documents, reports)
-  database.exec(`
+  await pool.query(`
     CREATE TABLE IF NOT EXISTS files (
       id TEXT PRIMARY KEY,
       patient_id TEXT NOT NULL,
@@ -89,15 +74,14 @@ function initializeSchema(): void {
       file_size INTEGER NOT NULL,
       file_category TEXT NOT NULL CHECK(file_category IN ('xray', 'scan', 'report', 'prescription', 'lab_result', 'other')),
       description TEXT,
-      created_at TEXT NOT NULL DEFAULT (datetime('now')),
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       FOREIGN KEY (patient_id) REFERENCES users(id),
       FOREIGN KEY (record_id) REFERENCES medical_records(id) ON DELETE SET NULL,
       FOREIGN KEY (uploaded_by) REFERENCES users(id)
-    );
+    )
   `);
 
-  // Prescriptions table
-  database.exec(`
+  await pool.query(`
     CREATE TABLE IF NOT EXISTS prescriptions (
       id TEXT PRIMARY KEY,
       record_id TEXT NOT NULL,
@@ -110,11 +94,10 @@ function initializeSchema(): void {
       refills INTEGER DEFAULT 0,
       FOREIGN KEY (record_id) REFERENCES medical_records(id) ON DELETE CASCADE,
       FOREIGN KEY (patient_id) REFERENCES users(id)
-    );
+    )
   `);
 
-  // Audit log for security/privacy compliance
-  database.exec(`
+  await pool.query(`
     CREATE TABLE IF NOT EXISTS audit_log (
       id TEXT PRIMARY KEY,
       user_id TEXT NOT NULL,
@@ -122,26 +105,25 @@ function initializeSchema(): void {
       target_type TEXT,
       target_id TEXT,
       ip_address TEXT,
-      timestamp TEXT NOT NULL DEFAULT (datetime('now'))
-    );
+      timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
   `);
 
-  // Seed the doctor account if not exists
-  seedDoctor(database);
+  await seedDoctor();
 }
 
-function seedDoctor(database: Database.Database): void {
-  const existing = database.prepare('SELECT id FROM users WHERE email = ?').get('dr.saria@clinic.ae');
-  if (!existing) {
-    const bcryptjs = require('bcryptjs');
-    const hash = bcryptjs.hashSync('DrSaria2024!', 12);
-    const { v4: uuidv4 } = require('uuid');
-    database.prepare(`
-      INSERT INTO users (id, email, password_hash, role, first_name, last_name, phone, is_active, approved)
-      VALUES (?, ?, ?, 'doctor', 'Saria', 'El Hachem', '+971-XX-XXX-XXXX', 1, 1)
-    `).run(uuidv4(), 'dr.saria@clinic.ae', hash);
+async function seedDoctor(): Promise<void> {
+  const result = await pool.query('SELECT id FROM users WHERE email = $1', ['dr.saria@clinic.ae']);
+  if (result.rows.length === 0) {
+    const hash = await bcrypt.hash('DrSaria2024!', 12);
+    const id = uuidv4();
+    await pool.query(
+      `INSERT INTO users (id, email, password_hash, role, first_name, last_name, phone, is_active, approved)
+       VALUES ($1, $2, $3, 'doctor', 'Saria', 'El Hachem', '+971-XX-XXX-XXXX', 1, 1)`,
+      [id, 'dr.saria@clinic.ae', hash]
+    );
     console.log('✅ Doctor account seeded: dr.saria@clinic.ae / DrSaria2024!');
   }
 }
 
-export default getDb;
+export default pool;
