@@ -186,6 +186,28 @@ router.put('/me/profile', async (req: AuthRequest, res: Response): Promise<void>
   }
 });
 
+// PUT /api/patients/:id/reset-password - Doctor only
+router.put('/:id/reset-password', requireRole('doctor'), async (req: AuthRequest, res: Response): Promise<void> => {
+  const { password } = req.body;
+  if (!password || password.length < 8) {
+    res.status(400).json({ error: 'Password must be at least 8 characters' });
+    return;
+  }
+  try {
+    const result = await pool.query("SELECT id FROM users WHERE id = $1 AND role = 'patient'", [req.params.id]);
+    if (result.rows.length === 0) {
+      res.status(404).json({ error: 'Patient not found' });
+      return;
+    }
+    const hash = await bcrypt.hash(password, 12);
+    await pool.query('UPDATE users SET password_hash = $1, updated_at = NOW() WHERE id = $2', [hash, req.params.id]);
+    res.json({ message: 'Password reset successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to reset password' });
+  }
+});
+
 // POST /api/patients/create-nurse - Doctor creates a nurse account
 router.post('/create-nurse', requireRole('doctor'), async (req: AuthRequest, res: Response): Promise<void> => {
   const { email, password, first_name, last_name, phone } = req.body;

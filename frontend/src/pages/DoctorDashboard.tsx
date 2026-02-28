@@ -7,7 +7,7 @@ import { User } from '../types';
 import {
   Users, UserCheck, Clock, Search, CheckCircle, XCircle,
   FileText, Plus, Shield, Activity, Bell, UserX, RefreshCw,
-  ChevronDown, AlertTriangle, Mail
+  ChevronDown, AlertTriangle, Mail, KeyRound
 } from 'lucide-react';
 
 // ─── Toast ────────────────────────────────────────────────────────────────────
@@ -81,6 +81,8 @@ export default function DoctorDashboard() {
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [confirm, setConfirm] = useState<{ id: string; action: 'reject' | 'deactivate' } | null>(null);
   const [showInactive, setShowInactive] = useState(false);
+  const [resetPwd, setResetPwd] = useState<{ id: string; name: string } | null>(null);
+  const [newPassword, setNewPassword] = useState('');
 
   const toast = useCallback((msg: string, type: ToastType = 'success') => {
     const id = ++toastId;
@@ -163,6 +165,21 @@ export default function DoctorDashboard() {
     }
   };
 
+  const resetPassword = async () => {
+    if (!resetPwd || newPassword.length < 8) return;
+    setActionId(resetPwd.id);
+    try {
+      await api.put(`/patients/${resetPwd.id}/reset-password`, { password: newPassword });
+      toast(`Password reset for ${resetPwd.name}`);
+      setResetPwd(null);
+      setNewPassword('');
+    } catch {
+      toast('Failed to reset password', 'error');
+    } finally {
+      setActionId(null);
+    }
+  };
+
   const filtered = patients.filter(p => {
     if (!search) return true;
     const q = search.toLowerCase();
@@ -207,6 +224,40 @@ export default function DoctorDashboard() {
           }}
           onCancel={() => setConfirm(null)}
         />
+      )}
+
+      {resetPwd && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
+          <div className="bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full">
+            <div className="flex items-start gap-4 mb-5">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 bg-blue-100">
+                <KeyRound className="w-5 h-5 text-blue-600" />
+              </div>
+              <div>
+                <p className="text-gray-900 font-semibold text-sm">Reset Password</p>
+                <p className="text-gray-500 text-xs mt-0.5">Set a new password for {resetPwd.name}</p>
+              </div>
+            </div>
+            <input
+              type="password"
+              placeholder="New password (min 8 characters)"
+              value={newPassword}
+              onChange={e => setNewPassword(e.target.value)}
+              className="input-field w-full mb-4 text-sm"
+              autoFocus
+            />
+            <div className="flex justify-end gap-3">
+              <button onClick={() => { setResetPwd(null); setNewPassword(''); }} className="btn-secondary text-sm py-2 px-4">Cancel</button>
+              <button
+                onClick={resetPassword}
+                disabled={newPassword.length < 8 || actionId === resetPwd.id}
+                className="text-sm py-2 px-4 rounded-lg font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors disabled:opacity-50"
+              >
+                {actionId === resetPwd.id ? 'Saving…' : 'Save Password'}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -382,6 +433,15 @@ export default function DoctorDashboard() {
                             <Plus className="w-3.5 h-3.5" />
                             Add
                           </Link>
+                          <button
+                            onClick={() => { setResetPwd({ id: p.id, name: `${p.first_name} ${p.last_name}` }); setNewPassword(''); }}
+                            disabled={actionId === p.id}
+                            className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700 font-medium bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50 opacity-0 group-hover:opacity-100"
+                            title="Reset password"
+                          >
+                            <KeyRound className="w-3.5 h-3.5" />
+                            Reset Pwd
+                          </button>
                           <button
                             onClick={() => setConfirm({ id: p.id, action: 'deactivate' })}
                             disabled={actionId === p.id}
