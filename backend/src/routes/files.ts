@@ -9,7 +9,7 @@ import { authenticate, requireRole, AuthRequest, auditLog } from '../middleware/
 const router = Router();
 router.use(authenticate);
 
-const UPLOADS_DIR = process.env.UPLOADS_DIR || path.join(__dirname, '../../uploads');
+const UPLOADS_DIR = path.resolve(process.env.UPLOADS_DIR || path.join(__dirname, '../../uploads'));
 
 if (!fs.existsSync(UPLOADS_DIR)) {
   fs.mkdirSync(UPLOADS_DIR, { recursive: true });
@@ -107,9 +107,7 @@ router.get('/download/:fileId', auditLog('download_file'), async (req: AuthReque
       return;
     }
 
-    res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(file.original_name)}"`);
-    res.setHeader('Content-Type', file.mime_type);
-    res.sendFile(filePath);
+    res.download(filePath, file.original_name);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to download file' });
