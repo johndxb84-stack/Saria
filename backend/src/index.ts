@@ -18,9 +18,12 @@ const PORT = process.env.PORT || 5000;
 getDb();
 
 // Middleware
-const allowedOrigins = process.env.NODE_ENV === 'production'
-  ? [process.env.FRONTEND_URL || 'https://drsariaelhachem.com', 'https://drsariaelhachem.com']
-  : ['http://localhost:5173', 'http://localhost:3000'];
+const allowedOrigins = [
+  'https://drsariaelhachem.com',
+  'https://www.drsariaelhachem.com',
+  ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : []),
+  ...(process.env.NODE_ENV !== 'production' ? ['http://localhost:5173', 'http://localhost:3000'] : []),
+];
 
 app.use(cors({
   origin: (origin, callback) => {
