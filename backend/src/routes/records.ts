@@ -85,8 +85,8 @@ router.post('/', requireRole('doctor', 'nurse'), async (req: AuthRequest, res: R
 
     const recordId = uuidv4();
     await pool.query(
-      `INSERT INTO medical_records (id, patient_id, created_by, record_type, title, description, date)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      `INSERT INTO medical_records (id, patient_id, created_by, record_type, title, description, date, is_confidential)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, 0)`,
       [recordId, patient_id, req.user!.id, record_type, title.trim(), description || null, date]
     );
 

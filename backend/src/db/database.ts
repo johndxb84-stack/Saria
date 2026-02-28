@@ -32,6 +32,8 @@ export async function initializeSchema(): Promise<void> {
   // Add ID columns if they don't exist (for existing databases)
   await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS id_type TEXT`);
   await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS id_number TEXT`);
+  await pool.query(`ALTER TABLE medical_records ADD COLUMN IF NOT EXISTS is_confidential INTEGER NOT NULL DEFAULT 0`).catch(() => {});
+  await pool.query(`ALTER TABLE medical_records ALTER COLUMN is_confidential SET DEFAULT 0`).catch(() => {});
 
   await pool.query(`
     CREATE TABLE IF NOT EXISTS medical_records (
