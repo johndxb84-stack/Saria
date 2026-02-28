@@ -13,7 +13,8 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
   const {
     email, password, first_name, last_name,
     phone, date_of_birth, gender, address,
-    emergency_contact, emergency_phone
+    emergency_contact, emergency_phone,
+    id_type, id_number
   } = req.body;
 
   if (!email || !password || !first_name || !last_name) {
@@ -22,6 +23,18 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
   }
   if (password.length < 8) {
     res.status(400).json({ error: 'Password must be at least 8 characters' });
+    return;
+  }
+  if (!id_type || !['eid', 'passport'].includes(id_type)) {
+    res.status(400).json({ error: 'Please indicate your residency status and provide your ID number' });
+    return;
+  }
+  if (!id_number || !id_number.trim()) {
+    res.status(400).json({ error: id_type === 'eid' ? 'Emirates ID number is required' : 'Passport number is required' });
+    return;
+  }
+  if (id_type === 'eid' && !/^784-\d{4}-\d{7}-\d$/.test(id_number.trim())) {
+    res.status(400).json({ error: 'Invalid Emirates ID format. It must follow the pattern: 784-XXXX-XXXXXXX-X' });
     return;
   }
 
@@ -35,11 +48,12 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
     const hash = await bcrypt.hash(password, 12);
     const id = uuidv4();
     await pool.query(
-      `INSERT INTO users (id, email, password_hash, role, first_name, last_name, phone, date_of_birth, gender, address, emergency_contact, emergency_phone, approved)
-       VALUES ($1, $2, $3, 'patient', $4, $5, $6, $7, $8, $9, $10, $11, 0)`,
+      `INSERT INTO users (id, email, password_hash, role, first_name, last_name, phone, date_of_birth, gender, address, emergency_contact, emergency_phone, id_type, id_number, approved)
+       VALUES ($1, $2, $3, 'patient', $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, 0)`,
       [id, email.toLowerCase().trim(), hash, first_name.trim(), last_name.trim(),
        phone || null, date_of_birth || null, gender || null, address || null,
-       emergency_contact || null, emergency_phone || null]
+       emergency_contact || null, emergency_phone || null,
+       id_type, id_number.trim()]
     );
 
     const newPatient = { id, first_name: first_name.trim(), last_name: last_name.trim(), email: email.toLowerCase().trim(), phone: phone || null, date_of_birth: date_of_birth || null, gender: gender || null };

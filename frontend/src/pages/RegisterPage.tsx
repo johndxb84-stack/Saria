@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Heart, CheckCircle, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import { Heart, CheckCircle, AlertCircle, Eye, EyeOff, CreditCard, Globe } from 'lucide-react';
 import api from '../utils/api';
 
 export default function RegisterPage() {
@@ -12,11 +12,22 @@ export default function RegisterPage() {
   const [form, setForm] = useState({
     first_name: '', last_name: '', email: '', password: '', confirm_password: '',
     phone: '', date_of_birth: '', gender: '', address: '',
-    emergency_contact: '', emergency_phone: ''
+    emergency_contact: '', emergency_phone: '',
+    is_uae_resident: '' as '' | 'yes' | 'no',
+    id_number: ''
   });
 
   const set = (field: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
     setForm(f => ({ ...f, [field]: e.target.value }));
+
+  const handleEIDChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const digits = e.target.value.replace(/\D/g, '').slice(0, 15);
+    let formatted = digits;
+    if (digits.length > 3) formatted = `${digits.slice(0, 3)}-${digits.slice(3)}`;
+    if (digits.length > 7) formatted = `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`;
+    if (digits.length > 14) formatted = `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7, 14)}-${digits.slice(14)}`;
+    setForm(f => ({ ...f, id_number: formatted }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,6 +40,18 @@ export default function RegisterPage() {
       setError('Password must be at least 8 characters');
       return;
     }
+    if (!form.is_uae_resident) {
+      setError('Please indicate whether you are a UAE resident');
+      return;
+    }
+    if (!form.id_number.trim()) {
+      setError(form.is_uae_resident === 'yes' ? 'Emirates ID number is required' : 'Passport number is required');
+      return;
+    }
+    if (form.is_uae_resident === 'yes' && !/^784-\d{4}-\d{7}-\d$/.test(form.id_number.trim())) {
+      setError('Emirates ID must follow the format: 784-XXXX-XXXXXXX-X (15 digits)');
+      return;
+    }
     setLoading(true);
     try {
       await api.post('/auth/register', {
@@ -37,7 +60,9 @@ export default function RegisterPage() {
         phone: form.phone || undefined, date_of_birth: form.date_of_birth || undefined,
         gender: form.gender || undefined, address: form.address || undefined,
         emergency_contact: form.emergency_contact || undefined,
-        emergency_phone: form.emergency_phone || undefined
+        emergency_phone: form.emergency_phone || undefined,
+        id_type: form.is_uae_resident === 'yes' ? 'eid' : 'passport',
+        id_number: form.id_number.trim()
       });
       setStep('success');
     } catch (err: any) {
@@ -133,6 +158,82 @@ export default function RegisterPage() {
                   <input type="text" className="input-field" placeholder="Dubai, UAE" value={form.address} onChange={set('address')} />
                 </div>
               </div>
+            </div>
+
+            {/* Identification */}
+            <div>
+              <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-4 pb-2 border-b border-gray-100">
+                Identification
+              </h3>
+              <p className="text-sm text-gray-500 mb-4">Required for medical record verification.</p>
+
+              {/* Residency question */}
+              <p className="text-sm font-medium text-gray-700 mb-3">Are you a UAE resident? *</p>
+              <div className="grid sm:grid-cols-2 gap-3 mb-4">
+                <button
+                  type="button"
+                  onClick={() => setForm(f => ({ ...f, is_uae_resident: 'yes', id_number: '' }))}
+                  className={`flex items-center gap-3 p-4 rounded-xl border-2 text-left transition-all ${
+                    form.is_uae_resident === 'yes'
+                      ? 'border-primary-600 bg-primary-50 text-primary-700'
+                      : 'border-gray-200 hover:border-gray-300 text-gray-600'
+                  }`}
+                >
+                  <CreditCard className="w-5 h-5 flex-shrink-0" />
+                  <div>
+                    <div className="font-medium text-sm">Yes, UAE Resident</div>
+                    <div className="text-xs text-gray-500">I have an Emirates ID</div>
+                  </div>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setForm(f => ({ ...f, is_uae_resident: 'no', id_number: '' }))}
+                  className={`flex items-center gap-3 p-4 rounded-xl border-2 text-left transition-all ${
+                    form.is_uae_resident === 'no'
+                      ? 'border-primary-600 bg-primary-50 text-primary-700'
+                      : 'border-gray-200 hover:border-gray-300 text-gray-600'
+                  }`}
+                >
+                  <Globe className="w-5 h-5 flex-shrink-0" />
+                  <div>
+                    <div className="font-medium text-sm">No, Non-Resident / Visitor</div>
+                    <div className="text-xs text-gray-500">I will provide my passport</div>
+                  </div>
+                </button>
+              </div>
+
+              {/* EID field */}
+              {form.is_uae_resident === 'yes' && (
+                <div>
+                  <label className="label">Emirates ID Number (EID) *</label>
+                  <input
+                    type="text"
+                    className="input-field font-mono tracking-wide"
+                    placeholder="784-XXXX-XXXXXXX-X"
+                    value={form.id_number}
+                    onChange={handleEIDChange}
+                    maxLength={18}
+                    required
+                  />
+                  <p className="text-xs text-gray-400 mt-1">Format: 784-YYYY-NNNNNNN-C · 15 digits total</p>
+                </div>
+              )}
+
+              {/* Passport field */}
+              {form.is_uae_resident === 'no' && (
+                <div>
+                  <label className="label">Passport Number *</label>
+                  <input
+                    type="text"
+                    className="input-field uppercase"
+                    placeholder="e.g. A12345678"
+                    value={form.id_number}
+                    onChange={e => setForm(f => ({ ...f, id_number: e.target.value.toUpperCase() }))}
+                    required
+                  />
+                  <p className="text-xs text-gray-400 mt-1">As printed on your passport</p>
+                </div>
+              )}
             </div>
 
             {/* Account */}
