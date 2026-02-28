@@ -43,6 +43,7 @@ export default function PatientRecordsPage() {
   const [filterType, setFilterType] = useState<RecordType | ''>('');
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'records' | 'files'>('records');
+  const [downloadError, setDownloadError] = useState('');
 
   const isStaff = user?.role === 'doctor' || user?.role === 'nurse';
   const addRecordPath = user?.role === 'doctor'
@@ -79,15 +80,20 @@ export default function PatientRecordsPage() {
   });
 
   const handleDownload = async (fileId: string, fileName: string) => {
-    const response = await api.get(`/files/download/${fileId}`, { responseType: 'blob' });
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', fileName);
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    window.URL.revokeObjectURL(url);
+    setDownloadError('');
+    try {
+      const response = await api.get(`/files/download/${fileId}`, { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', fileName);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch {
+      setDownloadError('Failed to download file. Please try again.');
+    }
   };
 
   const formatFileSize = (bytes: number) => {
@@ -337,6 +343,9 @@ export default function PatientRecordsPage() {
 
         {activeTab === 'files' && (
           <div className="space-y-3">
+            {downloadError && (
+              <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-700">{downloadError}</div>
+            )}
             {files.length === 0 ? (
               <div className="card text-center py-16 text-gray-400">
                 <Paperclip className="w-12 h-12 mx-auto mb-3 opacity-40" />

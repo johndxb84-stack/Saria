@@ -63,14 +63,18 @@ router.post('/upload', requireRole('doctor', 'nurse'), upload.single('file'), as
       return;
     }
 
+    // Read file into memory and store in DB (persistent — survives Railway restarts/redeploys)
+    const fileData = fs.readFileSync(req.file.path);
+    fs.unlinkSync(req.file.path);
+
     const fileId = uuidv4();
     await pool.query(
-      `INSERT INTO files (id, patient_id, record_id, uploaded_by, file_name, original_name, mime_type, file_size, file_category, description)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+      `INSERT INTO files (id, patient_id, record_id, uploaded_by, file_name, original_name, mime_type, file_size, file_category, description, file_data)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
       [fileId, patient_id, record_id || null, req.user!.id,
        req.file.filename, req.file.originalname,
        req.file.mimetype, req.file.size,
-       file_category, description || null]
+       file_category, description || null, fileData]
     );
 
     res.status(201).json({
@@ -81,7 +85,7 @@ router.post('/upload', requireRole('doctor', 'nurse'), upload.single('file'), as
     });
   } catch (err) {
     console.error(err);
-    if (req.file) fs.unlinkSync(req.file.path);
+    if (req.file && fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
     res.status(500).json({ error: 'Failed to upload file' });
   }
 });
@@ -94,19 +98,27 @@ router.get('/download/:fileId', auditLog('download_file'), async (req: AuthReque
       res.status(404).json({ error: 'File not found' });
       return;
     }
-    const file = result.rows[0] as { file_name: string; original_name: string; mime_type: string; patient_id: string };
+    const file = result.rows[0] as { file_name: string; original_name: string; mime_type: string; patient_id: string; file_data: Buffer | null };
 
     if (req.user!.role === 'patient' && req.user!.id !== file.patient_id) {
       res.status(403).json({ error: 'Access denied' });
       return;
     }
 
+    // Serve from DB (primary — works on ephemeral filesystems like Railway)
+    if (file.file_data) {
+      res.setHeader('Content-Type', file.mime_type);
+      res.setHeader('Content-Disposition', `attachment; filename="${file.original_name}"`);
+      res.send(file.file_data);
+      return;
+    }
+
+    // Fallback: serve from disk for files uploaded before DB storage was added
     const filePath = path.join(UPLOADS_DIR, file.file_name);
     if (!fs.existsSync(filePath)) {
       res.status(404).json({ error: 'File not found on server' });
       return;
     }
-
     res.download(filePath, file.original_name);
   } catch (err) {
     console.error(err);

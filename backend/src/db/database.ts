@@ -80,12 +80,15 @@ export async function initializeSchema(): Promise<void> {
       file_size INTEGER NOT NULL,
       file_category TEXT NOT NULL CHECK(file_category IN ('xray', 'scan', 'report', 'prescription', 'lab_result', 'other')),
       description TEXT,
+      file_data BYTEA,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       FOREIGN KEY (patient_id) REFERENCES users(id),
       FOREIGN KEY (record_id) REFERENCES medical_records(id) ON DELETE SET NULL,
       FOREIGN KEY (uploaded_by) REFERENCES users(id)
     )
   `);
+  // Add file_data column to existing tables that predate this schema
+  await pool.query(`ALTER TABLE files ADD COLUMN IF NOT EXISTS file_data BYTEA`).catch(() => {});
 
   await pool.query(`
     CREATE TABLE IF NOT EXISTS prescriptions (

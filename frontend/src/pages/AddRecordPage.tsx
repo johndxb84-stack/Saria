@@ -74,7 +74,18 @@ export default function AddRecordPage() {
         fd.append('record_id', res.data.id);
         fd.append('file_category', fileCategory);
         if (fileDescription) fd.append('description', fileDescription);
-        await api.post('/files/upload', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+        // Use fetch so the browser sets Content-Type with the correct multipart boundary
+        const token = localStorage.getItem('token');
+        const uploadBase = (api.defaults.baseURL as string || '/api').replace(/\/$/, '');
+        const uploadResp = await fetch(`${uploadBase}/files/upload`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` },
+          body: fd
+        });
+        if (!uploadResp.ok) {
+          const body = await uploadResp.json().catch(() => ({}));
+          throw { response: { data: { error: body.error || 'Failed to upload file' } } };
+        }
         setUploadLoading(false);
       }
 
