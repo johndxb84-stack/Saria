@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import {
   Heart, Award, MapPin, Phone, Mail, Clock, Shield,
-  Stethoscope, Baby, Users, FlaskConical, FileText, Lock,
-  ChevronRight, Star, GraduationCap, Briefcase
+  Stethoscope, Users, FlaskConical, FileText, Lock,
+  ChevronRight, Star, GraduationCap, Briefcase,
+  Brain, Activity, ExternalLink, Instagram, CalendarCheck
 } from 'lucide-react';
 
 export default function HomePage() {
@@ -38,8 +39,9 @@ export default function HomePage() {
                   Access Patient Portal
                   <ChevronRight className="w-4 h-4" />
                 </Link>
-                <a href="#contact" className="inline-flex items-center gap-2 border-2 border-white/40 text-white px-6 py-3 rounded-xl font-semibold hover:bg-white/10 transition-colors">
-                  Book Appointment
+                <a href="https://okdc.me/srf6mG" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 border-2 border-white/40 text-white px-6 py-3 rounded-xl font-semibold hover:bg-white/10 transition-colors">
+                  <CalendarCheck className="w-4 h-4" />
+                  Book via Okadoc
                 </a>
               </div>
             </div>
@@ -78,15 +80,18 @@ export default function HomePage() {
                 About <span className="text-primary-600">Dr. Saria El Hachem</span>
               </h2>
               <p className="text-gray-600 text-lg leading-relaxed mb-6">
-                Dr. Saria El Hachem is a highly qualified Family Medicine physician with over 15 years
-                of experience providing holistic, patient-centered care. Born with a passion for
-                medicine and a deep commitment to family wellness, she has built her practice
-                in Dubai as a trusted health partner for hundreds of families.
+                Dr. Saria El Hachem is a Family Medicine Specialist at{' '}
+                <span className="font-semibold text-primary-600">Jumeirah American Clinic (JAC)</span>{' '}
+                in Dubai. She earned her Doctor of Medicine from USEK University in Lebanon and
+                completed her Residency in Family Medicine at the American University of Beirut (AUB).
+                She also holds a CBT-E certification for Eating Disorders from the Centre of Research
+                on Eating Disorders at the University of Oxford (CREDO).
               </p>
               <p className="text-gray-600 leading-relaxed mb-6">
-                Her approach combines the latest evidence-based medicine with a warm, compassionate
-                bedside manner. She believes that understanding the whole person — not just their
-                symptoms — is the foundation of excellent medical care.
+                With a multidisciplinary approach, Dr. El Hachem provides exceptional care for
+                patients of all ages — from preventive medicine and adult immunizations to the
+                diagnosis and treatment of eating disorders and mental health conditions. She manages
+                both acute and chronic illnesses with evidence-based, personalized care.
               </p>
               <p className="text-gray-600 leading-relaxed mb-8">
                 Fluent in Arabic, French, and English, Dr. El Hachem serves Dubai's diverse
@@ -100,11 +105,12 @@ export default function HomePage() {
             </div>
             <div className="space-y-4">
               {[
-                { icon: GraduationCap, title: 'Medical Education', desc: 'Doctor of Medicine (MD) — Top of Class', color: 'bg-blue-50 text-blue-600' },
-                { icon: Award, title: 'Board Certification', desc: 'Family Medicine Board Certified · DHA Licensed', color: 'bg-green-50 text-green-600' },
+                { icon: GraduationCap, title: 'Medical Education', desc: 'MD — USEK University, Lebanon · Residency at American University of Beirut (AUB)', color: 'bg-blue-50 text-blue-600' },
+                { icon: Award, title: 'Oxford Certification', desc: 'CBT-E for Eating Disorders — University of Oxford (CREDO), UK', color: 'bg-orange-50 text-orange-600' },
+                { icon: Shield, title: 'Board Certification', desc: 'Family Medicine Board Certified · DHA Licensed', color: 'bg-green-50 text-green-600' },
                 { icon: Briefcase, title: 'Clinical Experience', desc: '15+ years in Family & Community Medicine', color: 'bg-purple-50 text-purple-600' },
-                { icon: Star, title: 'Special Interests', desc: 'Preventive Care, Pediatrics, Women\'s Health, Chronic Disease Management', color: 'bg-yellow-50 text-yellow-600' },
-                { icon: MapPin, title: 'Location', desc: 'Dubai, United Arab Emirates', color: 'bg-red-50 text-red-600' },
+                { icon: Star, title: 'Special Interests', desc: 'Eating Disorders, Mental Health, Preventive Medicine, Women\'s Health, Chronic Disease', color: 'bg-yellow-50 text-yellow-600' },
+                { icon: MapPin, title: 'Work Location', desc: 'Jumeirah American Clinic (JAC) · Dubai, UAE', color: 'bg-red-50 text-red-600' },
               ].map(({ icon: Icon, title, desc, color }) => (
                 <div key={title} className="flex items-start gap-4 p-4 rounded-xl border border-gray-100 hover:shadow-md transition-shadow">
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${color}`}>
@@ -133,9 +139,9 @@ export default function HomePage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               { icon: Stethoscope, title: 'General Consultations', desc: 'Comprehensive assessments, health checks, and management of acute and chronic conditions.', color: 'bg-primary-500' },
-              { icon: Baby, title: 'Pediatric Care', desc: 'Expert care for infants, children, and adolescents including vaccinations and developmental monitoring.', color: 'bg-green-500' },
-              { icon: Heart, title: 'Preventive Medicine', desc: 'Screenings, lifestyle counseling, and proactive strategies to maintain your long-term health.', color: 'bg-red-500' },
-              { icon: FlaskConical, title: 'Diagnostics & Lab', desc: 'On-site blood work, urinalysis, and coordination with advanced imaging centers (X-ray, MRI, CT).', color: 'bg-purple-500' },
+              { icon: Heart, title: 'Preventive Medicine & Immunizations', desc: 'Screenings, adult immunizations, lifestyle counseling, and proactive strategies for long-term health.', color: 'bg-red-500' },
+              { icon: Activity, title: 'Eating Disorders', desc: 'Multidisciplinary diagnosis and treatment of eating disorders using evidence-based CBT-E therapy.', color: 'bg-teal-500' },
+              { icon: Brain, title: 'Mental Health', desc: 'Expert management of mental health conditions with compassionate, personalized care plans.', color: 'bg-indigo-500' },
               { icon: Users, title: "Women's Health", desc: 'Gynecological exams, family planning, prenatal guidance, and menopause management.', color: 'bg-pink-500' },
               { icon: FileText, title: 'Chronic Disease Management', desc: 'Ongoing care for diabetes, hypertension, thyroid disorders, asthma, and other chronic conditions.', color: 'bg-yellow-500' },
             ].map(({ icon: Icon, title, desc, color }) => (
@@ -219,47 +225,52 @@ export default function HomePage() {
             <p className="text-gray-600 text-lg">We are here to help you. Reach out to us anytime.</p>
           </div>
           <div className="grid lg:grid-cols-3 gap-8">
-            {[
-              {
-                icon: MapPin,
-                title: 'Clinic Address',
-                lines: ['Dubai, United Arab Emirates'],
-                color: 'text-red-500 bg-red-50'
-              },
-              {
-                icon: Phone,
-                title: 'Phone & WhatsApp',
-                lines: ['+971-XX-XXX-XXXX', 'WhatsApp available'],
-                color: 'text-green-500 bg-green-50'
-              },
-              {
-                icon: Mail,
-                title: 'Email',
-                lines: ['dr.saria@clinic.ae', 'For appointments & records'],
-                color: 'text-blue-500 bg-blue-50'
-              },
-            ].map(({ icon: Icon, title, lines, color }) => (
-              <div key={title} className="card text-center hover:shadow-md transition-shadow">
-                <div className={`w-12 h-12 ${color} rounded-xl flex items-center justify-center mx-auto mb-4`}>
-                  <Icon className="w-6 h-6" />
-                </div>
-                <h3 className="font-bold text-gray-900 mb-2">{title}</h3>
-                {lines.map(line => (
-                  <p key={line} className="text-gray-600 text-sm">{line}</p>
-                ))}
+            <div className="card text-center hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 text-red-500 bg-red-50 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <MapPin className="w-6 h-6" />
               </div>
-            ))}
+              <h3 className="font-bold text-gray-900 mb-3">Clinic Locations</h3>
+              <p className="text-primary-600 font-semibold text-sm mb-1">Jumeirah American Clinic (JAC)</p>
+              <p className="text-gray-600 text-sm mb-3">Al Wasl Branch · Dubai, UAE</p>
+              <div className="border-t border-gray-100 pt-3">
+                <p className="text-gray-600 text-sm">Suite 11B, The Village Mall</p>
+                <p className="text-gray-600 text-sm">Jumeirah Road, Dubai</p>
+              </div>
+            </div>
+            <div className="card text-center hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 text-green-500 bg-green-50 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <CalendarCheck className="w-6 h-6" />
+              </div>
+              <h3 className="font-bold text-gray-900 mb-2">Book an Appointment</h3>
+              <p className="text-gray-600 text-sm mb-4">Schedule your consultation online via Okadoc</p>
+              <a
+                href="https://okdc.me/srf6mG"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-primary-700 transition-colors"
+              >
+                Book via Okadoc
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+            <div className="card text-center hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 text-blue-500 bg-blue-50 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <Mail className="w-6 h-6" />
+              </div>
+              <h3 className="font-bold text-gray-900 mb-2">Email</h3>
+              <p className="text-gray-600 text-sm">dr.saria@clinic.ae</p>
+              <p className="text-gray-500 text-xs mt-1">For appointments & records</p>
+            </div>
           </div>
-          <div className="mt-12 card">
+          <div className="mt-8 card">
             <div className="flex items-start gap-4">
               <Clock className="w-5 h-5 text-primary-600 mt-0.5 flex-shrink-0" />
-              <div>
-                <h3 className="font-bold text-gray-900 mb-3">Clinic Hours</h3>
+              <div className="w-full">
+                <h3 className="font-bold text-gray-900 mb-3">Clinic Hours — Jumeirah American Clinic</h3>
                 <div className="grid sm:grid-cols-2 gap-2 text-sm text-gray-600">
                   {[
-                    ['Monday – Thursday', '8:00 AM – 6:00 PM'],
-                    ['Friday', '8:00 AM – 12:00 PM'],
-                    ['Saturday', '9:00 AM – 3:00 PM'],
+                    ['Monday – Thursday', '9:00 AM – 7:00 PM'],
+                    ['Friday – Saturday', '9:00 AM – 6:00 PM'],
                     ['Sunday', 'Closed'],
                   ].map(([day, hours]) => (
                     <div key={day} className="flex justify-between gap-4">
@@ -271,26 +282,77 @@ export default function HomePage() {
               </div>
             </div>
           </div>
+
+          {/* Review CTA */}
+          <div className="mt-8 rounded-2xl bg-gradient-to-r from-yellow-50 to-amber-50 border border-yellow-200 p-8">
+            <div className="flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
+              <div className="flex-shrink-0">
+                <div className="w-16 h-16 bg-yellow-100 rounded-2xl flex items-center justify-center">
+                  <Star className="w-8 h-8 text-yellow-500 fill-yellow-400" />
+                </div>
+              </div>
+              <div className="flex-1">
+                <h3 className="font-bold text-gray-900 text-xl mb-1">Enjoyed your visit?</h3>
+                <p className="text-gray-600 text-sm mb-4">
+                  Your feedback helps other patients find the care they need. Share your experience on Helium Doc.
+                </p>
+                <a
+                  href="https://heliumdoc.com/uae/saria-el-hachem/?utm_source=sharebutton&utm_medium=twitter&utm_campaign=Saria%20El%20Hachem"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 bg-yellow-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-yellow-600 transition-colors shadow-sm"
+                >
+                  <Star className="w-4 h-4 fill-white" />
+                  Leave a Review on Helium Doc
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Footer */}
       <footer className="bg-gray-900 text-gray-400 py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center">
                 <Heart className="w-4 h-4 text-white" />
               </div>
-              <span className="text-white font-semibold">Dr. Saria El Hachem</span>
+              <div>
+                <span className="text-white font-semibold block">Dr. Saria El Hachem</span>
+                <span className="text-gray-500 text-xs">Jumeirah American Clinic · Dubai, UAE</span>
+              </div>
             </div>
-            <p className="text-sm text-center">
+            <p className="text-xs text-center">
               © {new Date().getFullYear()} Dr. Saria El Hachem · Family Medicine · Dubai, UAE
               · All patient data is protected and confidential
             </p>
-            <div className="flex items-center gap-2 text-xs">
-              <Lock className="w-3 h-3" />
-              <span>HIPAA Compliant Portal</span>
+            <div className="flex items-center gap-4">
+              <a
+                href="https://www.instagram.com/drsariahachem/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-gray-400 hover:text-pink-400 transition-colors text-xs"
+                title="Follow on Instagram"
+              >
+                <Instagram className="w-4 h-4" />
+                <span>@drsariahachem</span>
+              </a>
+              <a
+                href="https://okdc.me/srf6mG"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-gray-400 hover:text-primary-400 transition-colors text-xs"
+              >
+                <CalendarCheck className="w-4 h-4" />
+                <span>Book Appointment</span>
+              </a>
+              <div className="flex items-center gap-1.5 text-xs">
+                <Lock className="w-3 h-3" />
+                <span>HIPAA Compliant</span>
+              </div>
             </div>
           </div>
         </div>
