@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
 import { getDb } from '../db/database';
 import { authenticate, requireRole, AuthRequest, auditLog } from '../middleware/auth';
+import { sendApprovalNotification, sendDeactivationNotification, sendReactivationNotification } from '../services/email';
 
 const router = Router();
 router.use(authenticate);
@@ -64,27 +65,52 @@ router.get('/:id', auditLog('view_patient'), (req: AuthRequest, res: Response): 
 // PUT /api/patients/:id/approve - Doctor only
 router.put('/:id/approve', requireRole('doctor'), (req: AuthRequest, res: Response): void => {
   const db = getDb();
-  const result = db.prepare(
-    "UPDATE users SET approved = 1, updated_at = datetime('now') WHERE id = ? AND role = 'patient'"
-  ).run(req.params.id);
-  if (result.changes === 0) {
+  const patient = db.prepare(
+    "SELECT id, email, first_name, last_name FROM users WHERE id = ? AND role = 'patient'"
+  ).get(req.params.id) as { id: string; email: string; first_name: string; last_name: string } | undefined;
+  if (!patient) {
     res.status(404).json({ error: 'Patient not found' });
     return;
   }
+  db.prepare("UPDATE users SET approved = 1, updated_at = datetime('now') WHERE id = ?").run(req.params.id);
+  sendApprovalNotification(patient).catch(e => console.error('Email error (approval):', e));
   res.json({ message: 'Patient approved successfully' });
+});
+
+// PUT /api/patients/:id/reject - Doctor only: reject a pending registration
+router.put('/:id/reject', requireRole('doctor'), (req: AuthRequest, res: Response): void => {
+  const db = getDb();
+  const patient = db.prepare(
+    "SELECT email, first_name, last_name FROM users WHERE id = ? AND role = 'patient' AND approved = 0"
+  ).get(req.params.id) as { email: string; first_name: string; last_name: string } | undefined;
+  if (!patient) {
+    res.status(404).json({ error: 'Pending patient not found' });
+    return;
+  }
+  db.prepare("UPDATE users SET is_active = 0, updated_at = datetime('now') WHERE id = ?").run(req.params.id);
+  sendDeactivationNotification(patient).catch(e => console.error('Email error (rejection):', e));
+  res.json({ message: 'Patient registration rejected' });
 });
 
 // PUT /api/patients/:id/deactivate - Doctor only
 router.put('/:id/deactivate', requireRole('doctor'), (req: AuthRequest, res: Response): void => {
   const db = getDb();
+  const patient = db.prepare(
+    "SELECT email, first_name, last_name FROM users WHERE id = ? AND role = 'patient'"
+  ).get(req.params.id) as { email: string; first_name: string; last_name: string } | undefined;
   db.prepare("UPDATE users SET is_active = 0, updated_at = datetime('now') WHERE id = ? AND role = 'patient'").run(req.params.id);
+  if (patient) sendDeactivationNotification(patient).catch(e => console.error('Email error (deactivation):', e));
   res.json({ message: 'Patient deactivated' });
 });
 
 // PUT /api/patients/:id/reactivate - Doctor only
 router.put('/:id/reactivate', requireRole('doctor'), (req: AuthRequest, res: Response): void => {
   const db = getDb();
+  const patient = db.prepare(
+    "SELECT email, first_name, last_name FROM users WHERE id = ? AND role = 'patient'"
+  ).get(req.params.id) as { email: string; first_name: string; last_name: string } | undefined;
   db.prepare("UPDATE users SET is_active = 1, updated_at = datetime('now') WHERE id = ? AND role = 'patient'").run(req.params.id);
+  if (patient) sendReactivationNotification(patient).catch(e => console.error('Email error (reactivation):', e));
   res.json({ message: 'Patient reactivated' });
 });
 

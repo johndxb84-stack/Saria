@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
 import { getDb } from '../db/database';
 import { generateToken, authenticate, AuthRequest } from '../middleware/auth';
+import { sendRegistrationConfirmation, sendNewPatientAlert } from '../services/email';
 
 const router = Router();
 
@@ -38,8 +39,14 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
       VALUES (?, ?, ?, 'patient', ?, ?, ?, ?, ?, ?, ?, ?, 0)
     `).run(id, email.toLowerCase().trim(), hash, first_name.trim(), last_name.trim(), phone || null, date_of_birth || null, gender || null, address || null, emergency_contact || null, emergency_phone || null);
 
+    const newPatient = { id, first_name: first_name.trim(), last_name: last_name.trim(), email: email.toLowerCase().trim(), phone: phone || null, date_of_birth: date_of_birth || null, gender: gender || null };
+
+    // Fire-and-forget emails — don't block the response
+    sendRegistrationConfirmation(newPatient).catch(e => console.error('Email error (registration confirmation):', e));
+    sendNewPatientAlert(newPatient).catch(e => console.error('Email error (new patient alert):', e));
+
     res.status(201).json({
-      message: 'Registration successful. Your account is pending approval by Dr. El Hachem. You will be notified once activated.',
+      message: 'Registration successful. Your account is pending approval by Dr. El Hachem. You will be notified by email once activated.',
       id
     });
   } catch (err) {
