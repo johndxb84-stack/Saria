@@ -53,7 +53,7 @@ export default function HomePage() {
                 </div>
                 {/* Stats bubbles */}
                 <div className="absolute -top-4 -left-4 bg-white rounded-2xl shadow-lg px-4 py-3 text-center">
-                  <div className="text-2xl font-bold text-primary-700">15+</div>
+                  <div className="text-2xl font-bold text-primary-700">10+</div>
                   <div className="text-xs text-gray-500">Years Experience</div>
                 </div>
                 <div className="absolute -bottom-4 -right-4 bg-white rounded-2xl shadow-lg px-4 py-3 text-center">
@@ -77,14 +77,14 @@ export default function HomePage() {
               </div>
               <h2 className="text-3xl lg:text-4xl font-bold mb-6">Your Secure Patient Portal</h2>
               <p className="text-primary-100 text-lg leading-relaxed mb-8">
-                Access all your medical records, lab results, X-rays and radiology from anywhere, securely.
+                Access all your medical records, Lab results & Radiology from anywhere, securely.
                 Your data is encrypted and only visible to you and Dr. El Hachem's authorized medical team.
               </p>
               <div className="grid sm:grid-cols-2 gap-4 mb-8">
                 {[
                   { icon: FileText, text: 'Medical Records' },
                   { icon: FlaskConical, text: 'Lab & Blood Results' },
-                  { icon: Shield, text: 'X-rays & Scans' },
+                  { icon: Shield, text: 'Radiology' },
                   { icon: Lock, text: 'Private & Encrypted' },
                 ].map(({ icon: Icon, text }) => (
                   <div key={text} className="flex items-center gap-3">
@@ -107,7 +107,7 @@ export default function HomePage() {
             <div className="grid grid-cols-2 gap-4">
               {[
                 { title: 'Lab Results', type: 'Blood Test', date: 'Recent' },
-                { title: 'Chest X-Ray', type: 'X-Ray', date: 'Recent' },
+                { title: 'Radiology', type: 'X-Ray · MRI · Scan', date: 'Recent' },
               ].map((item) => (
                 <div key={item.title} className="bg-white/10 backdrop-blur rounded-xl p-4 border border-white/20">
                   <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center mb-3">
