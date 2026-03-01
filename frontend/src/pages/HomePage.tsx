@@ -2,7 +2,7 @@
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import {
-  Heart, MapPin, Mail, Clock, Shield,
+  Heart, MapPin, Mail, Shield,
   Stethoscope, FlaskConical, FileText, Lock,
   ChevronRight, Star, ExternalLink, Instagram
 } from 'lucide-react';
@@ -107,10 +107,8 @@ export default function HomePage() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               {[
-                { title: 'Consultation Notes', type: 'Consultation', date: 'Recent' },
-                { title: 'Blood Panel CBC', type: 'Blood Test', date: 'Recent' },
+                { title: 'Lab Results', type: 'Blood Test', date: 'Recent' },
                 { title: 'Chest X-Ray', type: 'X-Ray', date: 'Recent' },
-                { title: 'Prescription', type: 'Medication', date: 'Active' },
               ].map((item) => (
                 <div key={item.title} className="bg-white/10 backdrop-blur rounded-xl p-4 border border-white/20">
                   <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center mb-3">
@@ -171,27 +169,6 @@ export default function HomePage() {
               <p className="text-gray-500 text-xs mt-1">For appointments & records</p>
             </div>
           </div>
-          <div className="mt-8 card">
-            <div className="flex items-start gap-4">
-              <Clock className="w-5 h-5 text-primary-600 mt-0.5 flex-shrink-0" />
-              <div className="w-full">
-                <h3 className="font-bold text-gray-900 mb-3">Clinic Hours — Jumeirah American Clinic</h3>
-                <div className="grid sm:grid-cols-2 gap-2 text-sm text-gray-600">
-                  {[
-                    ['Monday – Thursday', '9:00 AM – 7:00 PM'],
-                    ['Friday – Saturday', '9:00 AM – 6:00 PM'],
-                    ['Sunday', 'Closed'],
-                  ].map(([day, hours]) => (
-                    <div key={day} className="flex justify-between gap-4">
-                      <span className="font-medium text-gray-700">{day}</span>
-                      <span>{hours}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
           {/* Review CTA */}
           <div className="mt-8 rounded-2xl bg-gradient-to-r from-yellow-50 to-amber-50 border border-yellow-200 p-8">
             <div className="flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
