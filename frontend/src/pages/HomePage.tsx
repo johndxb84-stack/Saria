@@ -2,10 +2,9 @@
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import {
-  Heart, Award, MapPin, Phone, Mail, Clock, Shield,
-  Stethoscope, Users, FlaskConical, FileText, Lock,
-  ChevronRight, Star, GraduationCap, Briefcase,
-  Brain, Activity, ExternalLink, Instagram, CalendarCheck
+  Heart, MapPin, Mail, Clock, Shield,
+  Stethoscope, FlaskConical, FileText, Lock,
+  ChevronRight, Star, ExternalLink, Instagram
 } from 'lucide-react';
 
 export default function HomePage() {
@@ -63,36 +62,6 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Services Section */}
-      <section id="services" className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Medical Services</h2>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-              Comprehensive family healthcare for every stage of life
-            </p>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { icon: Stethoscope, title: 'General Consultations', desc: 'Comprehensive assessments, health checks, and management of acute and chronic conditions.', color: 'bg-primary-500' },
-              { icon: Heart, title: 'Preventive Medicine & Immunizations', desc: 'Screenings, adult immunizations, lifestyle counseling, and proactive strategies for long-term health.', color: 'bg-red-500' },
-              { icon: Activity, title: 'Eating Disorders', desc: 'Multidisciplinary diagnosis and treatment of eating disorders using evidence-based CBT-E therapy.', color: 'bg-teal-500' },
-              { icon: Brain, title: 'Mental Health', desc: 'Expert management of mental health conditions with compassionate, personalized care plans.', color: 'bg-indigo-500' },
-              { icon: Users, title: "Women's Health", desc: 'Gynecological exams, family planning, prenatal guidance, and menopause management.', color: 'bg-pink-500' },
-              { icon: FileText, title: 'Chronic Disease Management', desc: 'Ongoing care for diabetes, hypertension, thyroid disorders, asthma, and other chronic conditions.', color: 'bg-yellow-500' },
-            ].map(({ icon: Icon, title, desc, color }) => (
-              <div key={title} className="card hover:shadow-md transition-all group">
-                <div className={`w-12 h-12 ${color} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                  <Icon className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="font-bold text-gray-900 mb-2">{title}</h3>
-                <p className="text-gray-600 text-sm leading-relaxed">{desc}</p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
