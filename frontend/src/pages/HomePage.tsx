@@ -77,9 +77,8 @@ export default function HomePage() {
               </div>
               <h2 className="text-3xl lg:text-4xl font-bold mb-6">Your Secure Patient Portal</h2>
               <p className="text-primary-100 text-lg leading-relaxed mb-8">
-                Access all your medical records, lab results, X-rays, prescriptions, and health history
-                from anywhere, securely. Your data is encrypted and only visible to you and Dr. El Hachem's
-                authorized medical team.
+                Access all your medical records, lab results, X-rays and radiology from anywhere, securely.
+                Your data is encrypted and only visible to you and Dr. El Hachem's authorized medical team.
               </p>
               <div className="grid sm:grid-cols-2 gap-4 mb-8">
                 {[
