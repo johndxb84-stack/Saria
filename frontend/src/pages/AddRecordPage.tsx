@@ -74,18 +74,14 @@ export default function AddRecordPage() {
         fd.append('record_id', res.data.id);
         fd.append('file_category', fileCategory);
         if (fileDescription) fd.append('description', fileDescription);
-        // Use fetch so the browser sets Content-Type with the correct multipart boundary
-        const token = localStorage.getItem('token');
-        const uploadBase = (api.defaults.baseURL as string || '/api').replace(/\/$/, '');
-        const uploadResp = await fetch(`${uploadBase}/files/upload`, {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${token}` },
-          body: fd
+        // Delete Content-Type so axios doesn't override the browser's
+        // automatic multipart/form-data boundary for FormData uploads
+        await api.post('/files/upload', fd, {
+          transformRequest: [(data: unknown, headers: Record<string, unknown>) => {
+            delete headers['Content-Type'];
+            return data;
+          }],
         });
-        if (!uploadResp.ok) {
-          const body = await uploadResp.json().catch(() => ({}));
-          throw { response: { data: { error: body.error || 'Failed to upload file' } } };
-        }
         setUploadLoading(false);
       }
 

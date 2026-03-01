@@ -63,19 +63,35 @@ router.post('/upload', requireRole('doctor', 'nurse'), upload.single('file'), as
       return;
     }
 
-    // Read file into memory and store in DB (persistent — survives Railway restarts/redeploys)
-    const fileData = fs.readFileSync(req.file.path);
-    fs.unlinkSync(req.file.path);
-
     const fileId = uuidv4();
-    await pool.query(
-      `INSERT INTO files (id, patient_id, record_id, uploaded_by, file_name, original_name, mime_type, file_size, file_category, description, file_data)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
-      [fileId, patient_id, record_id || null, req.user!.id,
-       req.file.filename, req.file.originalname,
-       req.file.mimetype, req.file.size,
-       file_category, description || null, fileData]
-    );
+    // Try to store file content in DB (survives Railway restarts).
+    // Falls back to disk-only storage if file_data column doesn't exist yet.
+    const fileData = fs.readFileSync(req.file.path);
+    try {
+      await pool.query(
+        `INSERT INTO files (id, patient_id, record_id, uploaded_by, file_name, original_name, mime_type, file_size, file_category, description, file_data)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
+        [fileId, patient_id, record_id || null, req.user!.id,
+         req.file.filename, req.file.originalname,
+         req.file.mimetype, req.file.size,
+         file_category, description || null, fileData]
+      );
+      fs.unlinkSync(req.file.path); // safe to remove disk copy now
+    } catch (dbErr: any) {
+      if (dbErr.code === '42703') {
+        // file_data column not yet migrated — store without it, keep file on disk
+        await pool.query(
+          `INSERT INTO files (id, patient_id, record_id, uploaded_by, file_name, original_name, mime_type, file_size, file_category, description)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+          [fileId, patient_id, record_id || null, req.user!.id,
+           req.file.filename, req.file.originalname,
+           req.file.mimetype, req.file.size,
+           file_category, description || null]
+        );
+      } else {
+        throw dbErr;
+      }
+    }
 
     res.status(201).json({
       message: 'File uploaded successfully',

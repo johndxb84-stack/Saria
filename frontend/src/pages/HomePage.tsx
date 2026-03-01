@@ -39,10 +39,6 @@ export default function HomePage() {
                   Access Patient Portal
                   <ChevronRight className="w-4 h-4" />
                 </Link>
-                <a href="https://okdc.me/srf6mG" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 border-2 border-white/40 text-white px-6 py-3 rounded-xl font-semibold hover:bg-white/10 transition-colors">
-                  <CalendarCheck className="w-4 h-4" />
-                  Book via Okadoc
-                </a>
               </div>
             </div>
             <div className="flex justify-center lg:justify-end">
@@ -66,62 +62,6 @@ export default function HomePage() {
                   <div className="text-xs text-gray-500">Patients Served</div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* About Section */}
-      <section id="about" className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
-                About <span className="text-primary-600">Dr. Saria El Hachem</span>
-              </h2>
-              <p className="text-gray-600 text-lg leading-relaxed mb-6">
-                Dr. Saria El Hachem is a Family Medicine Specialist at{' '}
-                <span className="font-semibold text-primary-600">Jumeirah American Clinic (JAC)</span>{' '}
-                in Dubai. She earned her Doctor of Medicine from USEK University in Lebanon and
-                completed her Residency in Family Medicine at the American University of Beirut (AUB).
-                She also holds a CBT-E certification for Eating Disorders from the Centre of Research
-                on Eating Disorders at the University of Oxford (CREDO).
-              </p>
-              <p className="text-gray-600 leading-relaxed mb-6">
-                With a multidisciplinary approach, Dr. El Hachem provides exceptional care for
-                patients of all ages — from preventive medicine and adult immunizations to the
-                diagnosis and treatment of eating disorders and mental health conditions. She manages
-                both acute and chronic illnesses with evidence-based, personalized care.
-              </p>
-              <p className="text-gray-600 leading-relaxed mb-8">
-                Fluent in Arabic, French, and English, Dr. El Hachem serves Dubai's diverse
-                international community with cultural sensitivity and professional excellence.
-              </p>
-              <div className="flex flex-wrap gap-3">
-                {['Arabic', 'English', 'French'].map(lang => (
-                  <span key={lang} className="badge-blue px-3 py-1 text-sm">{lang}</span>
-                ))}
-              </div>
-            </div>
-            <div className="space-y-4">
-              {[
-                { icon: GraduationCap, title: 'Medical Education', desc: 'MD - Family Medicine at American University of Beirut (AUB)', color: 'bg-blue-50 text-blue-600' },
-                { icon: Award, title: 'Oxford Certification', desc: 'CBT-E for Eating Disorders — University of Oxford (CREDO), UK', color: 'bg-orange-50 text-orange-600' },
-                { icon: Shield, title: 'Board Certification', desc: 'Family Medicine Board Certified · DHA Licensed', color: 'bg-green-50 text-green-600' },
-                { icon: Briefcase, title: 'Clinical Experience', desc: '15+ years in Family & Community Medicine', color: 'bg-purple-50 text-purple-600' },
-                { icon: Star, title: 'Special Interests', desc: 'Eating Disorders, Mental Health, Preventive Medicine, Women\'s Health, Chronic Disease', color: 'bg-yellow-50 text-yellow-600' },
-                { icon: MapPin, title: 'Work Location', desc: 'Jumeirah American Clinic (JAC) · Dubai, UAE', color: 'bg-red-50 text-red-600' },
-              ].map(({ icon: Icon, title, desc, color }) => (
-                <div key={title} className="flex items-start gap-4 p-4 rounded-xl border border-gray-100 hover:shadow-md transition-shadow">
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${color}`}>
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <div className="font-semibold text-gray-900 text-sm">{title}</div>
-                    <div className="text-gray-600 text-sm">{desc}</div>
-                  </div>
-                </div>
-              ))}
             </div>
           </div>
         </div>
@@ -238,19 +178,19 @@ export default function HomePage() {
               </div>
             </div>
             <div className="card text-center hover:shadow-md transition-shadow">
-              <div className="w-12 h-12 text-green-500 bg-green-50 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <CalendarCheck className="w-6 h-6" />
+              <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <Instagram className="w-6 h-6 text-white" />
               </div>
-              <h3 className="font-bold text-gray-900 mb-2">Book an Appointment</h3>
-              <p className="text-gray-600 text-sm mb-4">Schedule your consultation online via Okadoc</p>
+              <h3 className="font-bold text-gray-900 mb-2">Follow on Instagram</h3>
+              <p className="text-gray-600 text-sm mb-4">Stay connected with Dr. Saria's latest health tips and updates</p>
               <a
-                href="https://okdc.me/srf6mG"
+                href="https://www.instagram.com/drsariahachem/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-primary-700 transition-colors"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"
               >
-                Book via Okadoc
-                <ExternalLink className="w-3.5 h-3.5" />
+                <Instagram className="w-3.5 h-3.5" />
+                @drsariahachem
               </a>
             </div>
             <div className="card text-center hover:shadow-md transition-shadow">
@@ -258,7 +198,7 @@ export default function HomePage() {
                 <Mail className="w-6 h-6" />
               </div>
               <h3 className="font-bold text-gray-900 mb-2">Email</h3>
-              <p className="text-gray-600 text-sm">dr.saria@clinic.ae</p>
+              <a href="mailto:saria.hachem@jac.ae" className="text-primary-600 text-sm font-medium hover:underline">saria.hachem@jac.ae</a>
               <p className="text-gray-500 text-xs mt-1">For appointments & records</p>
             </div>
           </div>
@@ -339,15 +279,6 @@ export default function HomePage() {
               >
                 <Instagram className="w-4 h-4" />
                 <span>@drsariahachem</span>
-              </a>
-              <a
-                href="https://okdc.me/srf6mG"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-gray-400 hover:text-primary-400 transition-colors text-xs"
-              >
-                <CalendarCheck className="w-4 h-4" />
-                <span>Book Appointment</span>
               </a>
               <div className="flex items-center gap-1.5 text-xs">
                 <Lock className="w-3 h-3" />
