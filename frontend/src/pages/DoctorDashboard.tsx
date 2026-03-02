@@ -196,14 +196,14 @@ export default function DoctorDashboard() {
       <div className="min-h-screen text-white">
         <Navbar />
         <div className="flex items-center justify-center h-96">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-600"></div>
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-white/60"></div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen text-white">
       <Navbar />
       <ToastContainer toasts={toasts} remove={removeToast} />
 
@@ -328,7 +328,7 @@ export default function DoctorDashboard() {
                           </span>
                           {p.phone && <span className="text-xs text-white/45">{p.phone}</span>}
                           {p.date_of_birth && <span className="text-xs text-white/50">DOB: {p.date_of_birth}</span>}
-                          <span className="text-xs text-gray-400">
+                          <span className="text-xs text-white/45">
                             Registered {new Date(p.created_at!).toLocaleDateString('en-AE', { day: 'numeric', month: 'short', year: 'numeric' })}
                           </span>
                         </div>
@@ -365,7 +365,7 @@ export default function DoctorDashboard() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
             <h2 className="font-bold text-white">Active Patients</h2>
             <div className="relative w-full sm:w-64">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/45" />
               <input
                 type="text"
                 className="input-field pl-9 py-2 text-sm w-full"
@@ -387,10 +387,10 @@ export default function DoctorDashboard() {
                 <thead>
                   <tr className="text-left border-b border-white/10">
                     <th className="pb-3 text-xs font-semibold text-white/55 uppercase tracking-wide">Patient</th>
-                    <th className="pb-3 text-xs font-semibold text-gray-500 uppercase tracking-wide hidden sm:table-cell">Contact</th>
-                    <th className="pb-3 text-xs font-semibold text-gray-500 uppercase tracking-wide hidden lg:table-cell">DOB</th>
-                    <th className="pb-3 text-xs font-semibold text-gray-500 uppercase tracking-wide hidden lg:table-cell">Gender</th>
-                    <th className="pb-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Actions</th>
+                    <th className="pb-3 text-xs font-semibold text-white/55 uppercase tracking-wide hidden sm:table-cell">Contact</th>
+                    <th className="pb-3 text-xs font-semibold text-white/55 uppercase tracking-wide hidden lg:table-cell">DOB</th>
+                    <th className="pb-3 text-xs font-semibold text-white/55 uppercase tracking-wide hidden lg:table-cell">Gender</th>
+                    <th className="pb-3 text-xs font-semibold text-white/55 uppercase tracking-wide">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/8">
@@ -409,13 +409,13 @@ export default function DoctorDashboard() {
                       </td>
                       <td className="py-3 pr-4 hidden sm:table-cell">
                         <p className="text-sm text-white/80">{p.email}</p>
-                        {p.phone && <p className="text-xs text-gray-400">{p.phone}</p>}
+                        {p.phone && <p className="text-xs text-white/45">{p.phone}</p>}
                       </td>
                       <td className="py-3 pr-4 hidden lg:table-cell">
                         <p className="text-sm text-white/70">{p.date_of_birth || '—'}</p>
                       </td>
                       <td className="py-3 pr-4 hidden lg:table-cell">
-                        <p className="text-sm text-gray-600 capitalize">{p.gender || '—'}</p>
+                        <p className="text-sm text-white/70 capitalize">{p.gender || '—'}</p>
                       </td>
                       <td className="py-3">
                         <div className="flex items-center gap-1.5 flex-wrap">
@@ -480,7 +480,7 @@ export default function DoctorDashboard() {
                         </div>
                         <div>
                           <p className="text-sm font-medium text-white">{p.first_name} {p.last_name}</p>
-                          <p className="text-xs text-gray-400">{p.email}</p>
+                          <p className="text-xs text-white/45">{p.email}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
@@ -488,7 +488,7 @@ export default function DoctorDashboard() {
                         <button
                           onClick={() => reactivate(p.id, `${p.first_name} ${p.last_name}`)}
                           disabled={actionId === p.id}
-                          className="flex items-center gap-1 text-xs text-primary-600 hover:text-primary-700 font-medium bg-primary-50 hover:bg-primary-100 px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50"
+                          className="flex items-center gap-1 text-xs text-sky-200 hover:text-white font-medium bg-sky-400/15 hover:bg-sky-400/25 px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50"
                         >
                           <RefreshCw className="w-3 h-3" />
                           {actionId === p.id ? '…' : 'Reactivate'}

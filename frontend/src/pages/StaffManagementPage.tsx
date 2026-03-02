@@ -60,19 +60,19 @@ export default function StaffManagementPage() {
       <div className="min-h-screen text-white">
         <Navbar />
         <div className="flex items-center justify-center h-96">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-600"></div>
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-white/60"></div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen text-white">
       <Navbar />
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-center gap-3 mb-6">
           <button onClick={() => navigate('/doctor')} className="p-2 hover:bg-white/12 rounded-lg transition-colors text-white">
-            <ArrowLeft className="w-5 h-5 text-gray-600" />
+            <ArrowLeft className="w-5 h-5 text-white" />
           </button>
           <div className="flex-1">
             <h1 className="text-xl font-bold text-white">Staff Management</h1>
@@ -140,7 +140,7 @@ export default function StaffManagementPage() {
         {/* Staff list */}
         <div className="card">
           <div className="flex items-center gap-2 mb-4 text-white">
-            <Users className="w-5 h-5 text-gray-600" />
+            <Users className="w-5 h-5 text-white/60" />
             <h2 className="font-bold text-white">Nursing Staff ({staff.length})</h2>
           </div>
 

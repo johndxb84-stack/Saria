@@ -18,9 +18,9 @@ export default function ResetPasswordPage() {
   if (!token) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4 text-white">
-        <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full text-center">
+        <div className="glass rounded-2xl p-8 max-w-md w-full text-center">
           <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-          <h2 className="text-xl font-bold text-gray-900 mb-2">Invalid Reset Link</h2>
+          <h2 className="text-xl font-bold text-white mb-2">Invalid Reset Link</h2>
           <p className="text-white/60 text-sm mb-6">This reset link is missing or malformed.</p>
           <Link to="/forgot-password" className="btn-primary block py-3 text-base">Request a New Link</Link>
         </div>
@@ -98,7 +98,7 @@ export default function ResetPasswordPage() {
                 <div>
                   <label className="label">New Password</label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/45" />
                     <input
                       type={showPassword ? 'text' : 'password'}
                       className="input-field pl-10 pr-10"
@@ -120,7 +120,7 @@ export default function ResetPasswordPage() {
                 <div>
                   <label className="label">Confirm New Password</label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/45" />
                     <input
                       type={showPassword ? 'text' : 'password'}
                       className="input-field pl-10"
@@ -151,7 +151,7 @@ export default function ResetPasswordPage() {
           )}
         </div>
 
-        <div className="text-center mt-6 flex items-center justify-center gap-2 text-xs text-primary-300">
+        <div className="text-center mt-6 flex items-center justify-center gap-2 text-xs text-white/55">
           <Lock className="w-3 h-3" />
           <span>Your data is encrypted and protected</span>
         </div>

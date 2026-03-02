@@ -163,7 +163,7 @@ export default function RegisterPage() {
 
             {/* Identification */}
             <div>
-              <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-4 pb-2 border-b border-gray-100">
+              <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wide mb-4 pb-2 border-b border-white/10">
                 Identification
               </h3>
               <p className="text-sm text-white/60 mb-4">Required for medical record verification.</p>
@@ -191,8 +191,8 @@ export default function RegisterPage() {
                   onClick={() => setForm(f => ({ ...f, is_uae_resident: 'no', id_number: '' }))}
                   className={`flex items-center gap-3 p-4 rounded-xl border-2 text-left transition-all ${
                     form.is_uae_resident === 'no'
-                      ? 'border-primary-600 bg-primary-50 text-primary-700'
-                      : 'border-gray-200 hover:border-gray-300 text-gray-600'
+                      ? 'border-sky-300 bg-white/20 text-white'
+                      : 'border-white/20 hover:border-white/35 text-white/70'
                   }`}
                 >
                   <Globe className="w-5 h-5 flex-shrink-0" />
@@ -232,14 +232,14 @@ export default function RegisterPage() {
                     onChange={e => setForm(f => ({ ...f, id_number: e.target.value.toUpperCase() }))}
                     required
                   />
-                  <p className="text-xs text-gray-400 mt-1">As printed on your passport</p>
+                  <p className="text-xs text-white/45 mt-1">As printed on your passport</p>
                 </div>
               )}
             </div>
 
             {/* Account */}
             <div>
-              <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-4 pb-2 border-b border-gray-100">
+              <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wide mb-4 pb-2 border-b border-white/10">
                 Account Credentials
               </h3>
               <div className="grid sm:grid-cols-2 gap-4">
@@ -270,7 +270,7 @@ export default function RegisterPage() {
 
             {/* Emergency Contact */}
             <div>
-              <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-4 pb-2 border-b border-gray-100">
+              <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wide mb-4 pb-2 border-b border-white/10">
                 Emergency Contact (Optional)
               </h3>
               <div className="grid sm:grid-cols-2 gap-4">

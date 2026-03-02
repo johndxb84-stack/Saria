@@ -36,7 +36,7 @@ export default function NurseDashboard() {
       <div className="min-h-screen text-white">
         <Navbar />
         <div className="flex items-center justify-center h-96">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-600"></div>
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-white/60"></div>
         </div>
       </div>
     );
@@ -60,7 +60,7 @@ export default function NurseDashboard() {
               <h2 className="font-bold text-white">Patients ({filtered.length})</h2>
             </div>
             <div className="relative w-64">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/45" />
               <input
                 type="text"
                 className="input-field pl-9 py-2 text-sm"

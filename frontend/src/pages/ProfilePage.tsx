@@ -63,7 +63,7 @@ export default function ProfilePage() {
       <div className="min-h-screen text-white">
         <Navbar />
         <div className="flex items-center justify-center h-96">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-600"></div>
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-white/60"></div>
         </div>
       </div>
     );
@@ -72,13 +72,13 @@ export default function ProfilePage() {
   const dashboardPath = user?.role === 'doctor' ? '/doctor' : user?.role === 'nurse' ? '/nurse' : '/patient';
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen text-white">
       <Navbar />
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
           <button onClick={() => navigate(dashboardPath)} className="p-2 hover:bg-white/12 rounded-lg transition-colors text-white">
-            <ArrowLeft className="w-5 h-5 text-gray-600" />
+            <ArrowLeft className="w-5 h-5 text-white" />
           </button>
           <div>
             <h1 className="text-xl font-bold text-white">My Profile</h1>
@@ -121,19 +121,19 @@ export default function ProfilePage() {
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
                 <label className="label">First Name</label>
-                <input type="text" className="input-field bg-gray-50" value={profile?.first_name || ''} disabled />
+                <input type="text" className="input-field opacity-60" value={profile?.first_name || ''} disabled />
               </div>
               <div>
                 <label className="label">Last Name</label>
-                <input type="text" className="input-field bg-gray-50" value={profile?.last_name || ''} disabled />
+                <input type="text" className="input-field opacity-60" value={profile?.last_name || ''} disabled />
               </div>
               <div>
                 <label className="label">Date of Birth</label>
-                <input type="text" className="input-field bg-gray-50" value={profile?.date_of_birth || '—'} disabled />
+                <input type="text" className="input-field opacity-60" value={profile?.date_of_birth || '—'} disabled />
               </div>
               <div>
                 <label className="label">Gender</label>
-                <input type="text" className="input-field bg-gray-50 capitalize" value={profile?.gender || '—'} disabled />
+                <input type="text" className="input-field opacity-60 capitalize" value={profile?.gender || '—'} disabled />
               </div>
               <div>
                 <label className="label">Phone Number</label>
@@ -167,11 +167,11 @@ export default function ProfilePage() {
                 <span className="text-white/55">Name</span>
                 <span className="font-medium text-white">{profile?.first_name} {profile?.last_name}</span>
               </div>
-              <div className="flex justify-between py-2 border-b border-gray-50">
+              <div className="flex justify-between py-2 border-b border-white/8">
                 <span className="text-white/55">Email</span>
                 <span className="font-medium text-white">{profile?.email}</span>
               </div>
-              <div className="flex justify-between py-2 border-b border-gray-50">
+              <div className="flex justify-between py-2 border-b border-white/8">
                 <span className="text-white/55">Phone</span>
                 <span className="font-medium text-white">{profile?.phone || '—'}</span>
               </div>
@@ -187,12 +187,12 @@ export default function ProfilePage() {
         <form onSubmit={handlePasswordChange} className="card">
           <h2 className="font-bold text-white mb-4">Change Password</h2>
           {pwMsg && (
-            <div className="mb-4 flex items-center gap-2 bg-green-50 border border-green-200 rounded-xl p-3 text-sm text-green-700">
+            <div className="mb-4 flex items-center gap-2 bg-green-400/15 border border-green-400/30 rounded-xl p-3 text-sm text-green-200">
               <CheckCircle className="w-4 h-4 text-green-300" /> {pwMsg}
             </div>
           )}
           {pwError && (
-            <div className="mb-4 flex items-center gap-2 bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-700">
+            <div className="mb-4 flex items-center gap-2 bg-red-400/15 border border-red-400/30 rounded-xl p-3 text-sm text-red-200">
               <AlertCircle className="w-4 h-4 text-red-300" /> {pwError}
             </div>
           )}

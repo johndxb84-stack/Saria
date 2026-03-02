@@ -55,14 +55,14 @@ export default function PatientDashboard() {
       <div className="min-h-screen text-white">
         <Navbar />
         <div className="flex items-center justify-center h-96">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-600"></div>
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-white/60"></div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen text-white">
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Welcome */}
@@ -113,7 +113,7 @@ export default function PatientDashboard() {
               <div className="space-y-3">
                 {recentRecords.map(record => (
                   <div key={record.id} className="flex items-center gap-4 p-3 rounded-xl hover:bg-white/10 transition-colors border border-white/10">
-                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${RECORD_COLORS[record.record_type] || 'bg-gray-50 text-gray-600'}`}>
+                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${RECORD_COLORS[record.record_type] || 'bg-white/12 text-white/65'}`}>
                       {RECORD_ICONS[record.record_type]}
                     </div>
                     <div className="flex-1 min-w-0">

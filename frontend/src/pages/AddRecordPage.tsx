@@ -120,13 +120,13 @@ export default function AddRecordPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen text-white">
       <Navbar />
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
           <button onClick={goBack} className="p-2 hover:bg-white/12 rounded-lg transition-colors text-white">
-            <ArrowLeft className="w-5 h-5 text-gray-600" />
+            <ArrowLeft className="w-5 h-5 text-white" />
           </button>
           <div>
             <h1 className="text-xl font-bold text-white">Add Medical Record</h1>
@@ -177,7 +177,7 @@ export default function AddRecordPage() {
           {form.record_type === 'blood_test' && (
             <div className="card">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="font-bold text-gray-900">Blood Test Results</h2>
+                <h2 className="font-bold text-white">Blood Test Results</h2>
                 <button type="button" onClick={() => setBloodRows(r => [...r, { test_name: '', value: '', unit: '', reference_range: '', status: '', notes: '' }])}
                   className="text-sm text-sky-200 hover:text-white flex items-center gap-1">
                   <Plus className="w-4 h-4" /> Add Row
@@ -226,7 +226,7 @@ export default function AddRecordPage() {
           {form.record_type === 'prescription' && (
             <div className="card">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="font-bold text-gray-900">Medications</h2>
+                <h2 className="font-bold text-white">Medications</h2>
                 <button type="button" onClick={() => setRxRows(r => [...r, { medication_name: '', dosage: '', frequency: '', duration: '', instructions: '', refills: 0 }])}
                   className="text-sm text-sky-200 hover:text-white flex items-center gap-1">
                   <Plus className="w-4 h-4" /> Add Medication

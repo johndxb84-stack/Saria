@@ -43,8 +43,8 @@ export default function ForgotPasswordPage() {
           <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent pointer-events-none" />
           {sent ? (
             <div className="text-center">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <CheckCircle className="w-8 h-8 text-green-600" />
+              <div className="w-16 h-16 bg-green-400/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CheckCircle className="w-8 h-8 text-green-300" />
               </div>
               <h2 className="text-2xl font-bold text-white mb-2">Check your inbox</h2>
               <p className="text-white/60 text-sm mb-6">
@@ -104,7 +104,7 @@ export default function ForgotPasswordPage() {
           </Link>
         </div>
 
-        <div className="text-center mt-3 flex items-center justify-center gap-2 text-xs text-primary-300">
+        <div className="text-center mt-3 flex items-center justify-center gap-2 text-xs text-white/55">
           <Lock className="w-3 h-3" />
           <span>Reset links expire after 1 hour</span>
         </div>

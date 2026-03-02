@@ -107,7 +107,7 @@ export default function PatientRecordsPage() {
       <div className="min-h-screen text-white">
         <Navbar />
         <div className="flex items-center justify-center h-96">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-600"></div>
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-white/60"></div>
         </div>
       </div>
     );
@@ -118,14 +118,14 @@ export default function PatientRecordsPage() {
     : `${user?.first_name} ${user?.last_name}`;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen text-white">
       <Navbar />
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <button onClick={() => navigate(-1)} className="p-2 hover:bg-white/12 rounded-lg transition-colors text-white">
-              <ArrowLeft className="w-5 h-5 text-gray-600" />
+              <ArrowLeft className="w-5 h-5 text-white" />
             </button>
             <div>
               <h1 className="text-xl font-bold text-white">
@@ -239,7 +239,7 @@ export default function PatientRecordsPage() {
                             )}
                           </div>
                         </div>
-                        {isExpanded ? <ChevronUp className="w-4 h-4 text-white/40 flex-shrink-0 mt-1" /> : <ChevronDown className="w-4 h-4 text-gray-400 flex-shrink-0 mt-1" />}
+                        {isExpanded ? <ChevronUp className="w-4 h-4 text-white/40 flex-shrink-0 mt-1" /> : <ChevronDown className="w-4 h-4 text-white/40 flex-shrink-0 mt-1" />}
                       </button>
 
                       {isExpanded && (
@@ -261,8 +261,8 @@ export default function PatientRecordsPage() {
                                     <tr className="bg-white/10 text-left">
                                       <th className="px-3 py-2 text-xs font-semibold text-white/60 rounded-tl-lg">Test</th>
                                       <th className="px-3 py-2 text-xs font-semibold text-white/60">Value</th>
-                                      <th className="px-3 py-2 text-xs font-semibold text-gray-600">Unit</th>
-                                      <th className="px-3 py-2 text-xs font-semibold text-gray-600">Reference</th>
+                                      <th className="px-3 py-2 text-xs font-semibold text-white/60">Unit</th>
+                                      <th className="px-3 py-2 text-xs font-semibold text-white/60">Reference</th>
                                       <th className="px-3 py-2 text-xs font-semibold text-white/60 rounded-tr-lg">Status</th>
                                     </tr>
                                   </thead>
@@ -364,7 +364,7 @@ export default function PatientRecordsPage() {
                         <p className="text-xs text-white/55 mt-0.5 capitalize">{f.file_category.replace('_', ' ')} · {formatFileSize(f.file_size)}</p>
                         {f.description && <p className="text-xs text-white/50 mt-1">{f.description}</p>}
                         {f.record_title && <p className="text-xs text-sky-300 mt-1">📋 {f.record_title}</p>}
-                        <p className="text-xs text-gray-400 mt-1">
+                        <p className="text-xs text-white/45 mt-1">
                           {new Date(f.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
                           {f.uploaded_by_name && ` · ${f.uploaded_by_name}`}
                         </p>
