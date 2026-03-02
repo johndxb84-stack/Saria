@@ -34,40 +34,63 @@ export default function Navbar() {
     }
   };
 
+  const isHome = location.pathname === '/';
+
   return (
-    <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+    <nav className={`sticky top-0 z-50 transition-all duration-300 ${isHome ? 'glass-nav' : 'bg-white border-b border-gray-200 shadow-sm'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 font-bold text-primary-700">
-            <div className="w-9 h-9 bg-primary-600 rounded-full flex items-center justify-center">
+          <Link to="/" className="flex items-center gap-2 font-bold">
+            <div className={`w-9 h-9 rounded-full flex items-center justify-center ${isHome ? 'glass-pill' : 'bg-primary-600'}`}>
               <Heart className="w-5 h-5 text-white" />
             </div>
             <div className="hidden sm:block">
-              <div className="text-sm font-bold text-gray-900 leading-tight">Dr. Saria El Hachem</div>
-              <div className="text-xs text-primary-600 font-medium">Family Medicine · Dubai</div>
+              <div className={`text-sm font-bold leading-tight ${isHome ? 'text-white' : 'text-gray-900'}`}>Dr. Saria El Hachem</div>
+              <div className={`text-xs font-medium ${isHome ? 'text-white/60' : 'text-primary-600'}`}>Family Medicine · Dubai</div>
             </div>
           </Link>
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-1">
-            <Link to="/" className={`px-3 py-2 text-sm rounded-lg font-medium transition-colors ${isActive('/') ? 'bg-primary-50 text-primary-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}`}>
+            <Link
+              to="/"
+              className={`px-3 py-2 text-sm rounded-lg font-medium transition-colors ${
+                isHome
+                  ? isActive('/') ? 'bg-white/15 text-white' : 'text-white/75 hover:text-white hover:bg-white/10'
+                  : isActive('/') ? 'bg-primary-50 text-primary-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+              }`}
+            >
               About
             </Link>
-            <button onClick={() => scrollToSection('contact')} className="px-3 py-2 text-sm rounded-lg font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors">
+            <button
+              onClick={() => scrollToSection('contact')}
+              className={`px-3 py-2 text-sm rounded-lg font-medium transition-colors ${
+                isHome ? 'text-white/75 hover:text-white hover:bg-white/10' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+              }`}
+            >
               Contact
             </button>
 
             {user ? (
               <div className="flex items-center gap-2 ml-4">
-                <Link to={dashboardPath} className={`flex items-center gap-1.5 px-3 py-2 text-sm rounded-lg font-medium transition-colors ${location.pathname.startsWith(dashboardPath) ? 'bg-primary-50 text-primary-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}`}>
+                <Link
+                  to={dashboardPath}
+                  className={`flex items-center gap-1.5 px-3 py-2 text-sm rounded-lg font-medium transition-colors ${
+                    isHome
+                      ? location.pathname.startsWith(dashboardPath) ? 'bg-white/15 text-white' : 'text-white/75 hover:text-white hover:bg-white/10'
+                      : location.pathname.startsWith(dashboardPath) ? 'bg-primary-50 text-primary-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  }`}
+                >
                   <LayoutDashboard className="w-4 h-4" />
                   Dashboard
                 </Link>
                 <div className="relative">
                   <button
                     onClick={() => setDropdownOpen(!dropdownOpen)}
-                    className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors"
+                    className={`flex items-center gap-2 px-3 py-2 text-sm rounded-lg font-medium transition-colors ${
+                      isHome ? 'text-white/75 hover:text-white hover:bg-white/10' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                    }`}
                   >
                     <div className="w-7 h-7 bg-primary-100 rounded-full flex items-center justify-center">
                       <span className="text-primary-700 text-xs font-bold">
@@ -129,14 +152,26 @@ export default function Navbar() {
               </div>
             ) : (
               <div className="flex items-center gap-2 ml-4">
-                <Link to="/login" className="btn-secondary text-sm">Sign In</Link>
-                <Link to="/register" className="btn-primary text-sm">Patient Portal</Link>
+                {isHome ? (
+                  <>
+                    <Link to="/login" className="glass-pill px-4 py-2 rounded-lg text-sm font-medium text-white hover:bg-white/20 transition-all duration-200">Sign In</Link>
+                    <Link to="/register" className="glass-pill px-4 py-2 rounded-lg text-sm font-medium text-white hover:bg-white/20 transition-all duration-200">Patient Portal</Link>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/login" className="btn-secondary text-sm">Sign In</Link>
+                    <Link to="/register" className="btn-primary text-sm">Patient Portal</Link>
+                  </>
+                )}
               </div>
             )}
           </div>
 
           {/* Mobile toggle */}
-          <button className="md:hidden p-2 rounded-lg hover:bg-gray-100" onClick={() => setMobileOpen(!mobileOpen)}>
+          <button
+            className={`md:hidden p-2 rounded-lg transition-colors ${isHome ? 'text-white hover:bg-white/10' : 'hover:bg-gray-100'}`}
+            onClick={() => setMobileOpen(!mobileOpen)}
+          >
             {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
@@ -144,21 +179,21 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden border-t border-gray-100 bg-white px-4 py-3 space-y-1">
-          <Link to="/" className="block px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-gray-50" onClick={() => setMobileOpen(false)}>About</Link>
-          <button onClick={() => scrollToSection('contact')} className="w-full text-left px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-gray-50">Contact</button>
+        <div className={`md:hidden px-4 py-3 space-y-1 ${isHome ? 'glass-nav border-t border-white/10' : 'border-t border-gray-100 bg-white'}`}>
+          <Link to="/" className={`block px-3 py-2 text-sm rounded-lg ${isHome ? 'text-white/80 hover:bg-white/10' : 'text-gray-700 hover:bg-gray-50'}`} onClick={() => setMobileOpen(false)}>About</Link>
+          <button onClick={() => scrollToSection('contact')} className={`w-full text-left px-3 py-2 text-sm rounded-lg ${isHome ? 'text-white/80 hover:bg-white/10' : 'text-gray-700 hover:bg-gray-50'}`}>Contact</button>
           {user ? (
             <>
-              <Link to={dashboardPath} className="block px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-gray-50" onClick={() => setMobileOpen(false)}>Dashboard</Link>
-              <Link to={`${dashboardPath}/profile`} className="block px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-gray-50" onClick={() => setMobileOpen(false)}>Profile</Link>
-              <button onClick={() => { handleLogout(); setMobileOpen(false); }} className="w-full text-left px-3 py-2 text-sm rounded-lg text-red-600 hover:bg-red-50">
+              <Link to={dashboardPath} className={`block px-3 py-2 text-sm rounded-lg ${isHome ? 'text-white/80 hover:bg-white/10' : 'text-gray-700 hover:bg-gray-50'}`} onClick={() => setMobileOpen(false)}>Dashboard</Link>
+              <Link to={`${dashboardPath}/profile`} className={`block px-3 py-2 text-sm rounded-lg ${isHome ? 'text-white/80 hover:bg-white/10' : 'text-gray-700 hover:bg-gray-50'}`} onClick={() => setMobileOpen(false)}>Profile</Link>
+              <button onClick={() => { handleLogout(); setMobileOpen(false); }} className={`w-full text-left px-3 py-2 text-sm rounded-lg ${isHome ? 'text-red-300 hover:bg-white/10' : 'text-red-600 hover:bg-red-50'}`}>
                 Sign Out
               </button>
             </>
           ) : (
             <>
-              <Link to="/login" className="block px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-gray-50" onClick={() => setMobileOpen(false)}>Sign In</Link>
-              <Link to="/register" className="block px-3 py-2 text-sm rounded-lg bg-primary-600 text-white" onClick={() => setMobileOpen(false)}>Patient Portal</Link>
+              <Link to="/login" className={`block px-3 py-2 text-sm rounded-lg ${isHome ? 'text-white/80 hover:bg-white/10' : 'text-gray-700 hover:bg-gray-50'}`} onClick={() => setMobileOpen(false)}>Sign In</Link>
+              <Link to="/register" className={`block px-3 py-2 text-sm rounded-lg font-medium ${isHome ? 'glass-pill text-white' : 'bg-primary-600 text-white'}`} onClick={() => setMobileOpen(false)}>Patient Portal</Link>
             </>
           )}
         </div>
