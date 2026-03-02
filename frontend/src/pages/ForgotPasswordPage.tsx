@@ -24,29 +24,30 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-900 via-primary-800 to-primary-700 flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4 text-white">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-3">
-            <div className="w-12 h-12 bg-white/20 backdrop-blur rounded-full flex items-center justify-center">
+            <div className="w-12 h-12 glass-pill rounded-full flex items-center justify-center">
               <Heart className="w-6 h-6 text-white" />
             </div>
             <div className="text-left">
               <div className="text-white font-bold text-lg leading-tight">Dr. Saria El Hachem</div>
-              <div className="text-primary-200 text-sm">Patient Portal</div>
+              <div className="text-white/60 text-sm">Patient Portal</div>
             </div>
           </Link>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-2xl p-8">
+        <div className="glass rounded-3xl p-8 relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent pointer-events-none" />
           {sent ? (
             <div className="text-center">
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <CheckCircle className="w-8 h-8 text-green-600" />
               </div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Check your inbox</h2>
-              <p className="text-gray-500 text-sm mb-6">
+              <h2 className="text-2xl font-bold text-white mb-2">Check your inbox</h2>
+              <p className="text-white/60 text-sm mb-6">
                 If an account exists for <strong>{email}</strong>, you'll receive a password reset link shortly. The link expires in 1 hour.
               </p>
               <Link to="/login" className="btn-primary w-full py-3 text-base block text-center">
@@ -55,15 +56,15 @@ export default function ForgotPasswordPage() {
             </div>
           ) : (
             <>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Forgot password?</h2>
-              <p className="text-gray-500 text-sm mb-8">
+              <h2 className="text-2xl font-bold text-white mb-2">Forgot password?</h2>
+              <p className="text-white/60 text-sm mb-8">
                 Enter your email and we'll send you a link to reset your password.
               </p>
 
               {error && (
-                <div className="mb-5 flex items-start gap-3 bg-red-50 border border-red-200 rounded-xl p-4">
-                  <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-                  <p className="text-sm text-red-700">{error}</p>
+                <div className="mb-5 flex items-start gap-3 bg-red-400/15 border border-red-400/30 rounded-xl p-4">
+                  <AlertCircle className="w-5 h-5 text-red-300 flex-shrink-0 mt-0.5" />
+                  <p className="text-sm text-red-200">{error}</p>
                 </div>
               )}
 
@@ -71,7 +72,7 @@ export default function ForgotPasswordPage() {
                 <div>
                   <label className="label">Email Address</label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/45" />
                     <input
                       type="email"
                       className="input-field pl-10"
@@ -97,7 +98,7 @@ export default function ForgotPasswordPage() {
         </div>
 
         <div className="text-center mt-6">
-          <Link to="/login" className="text-primary-200 text-sm hover:text-white transition-colors inline-flex items-center gap-1">
+          <Link to="/login" className="text-white/55 text-sm hover:text-white transition-colors inline-flex items-center gap-1">
             <ArrowLeft className="w-3 h-3" />
             Back to Sign In
           </Link>

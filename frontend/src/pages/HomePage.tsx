@@ -11,18 +11,6 @@ export default function HomePage() {
   return (
     <div className="min-h-screen text-white relative overflow-x-hidden">
 
-      {/* ── Fixed gradient background + floating orbs ── */}
-      <div className="fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,#0f2a5e,#050d1f_60%,#0a0618)]" />
-        {/* Orbs */}
-        <div className="orb   absolute -top-32  -left-32  w-[620px] h-[620px] rounded-full bg-blue-600/28   blur-[130px]" />
-        <div className="orb-2 absolute top-1/3   -right-24  w-[480px] h-[480px] rounded-full bg-violet-600/28  blur-[110px]" />
-        <div className="orb-3 absolute bottom-0  left-1/4   w-[500px] h-[500px] rounded-full bg-cyan-500/20   blur-[120px]" />
-        <div className="orb-4 absolute -bottom-20 right-1/3  w-[360px] h-[360px] rounded-full bg-pink-500/18   blur-[90px]" />
-        {/* Noise / grain overlay */}
-        <div className="absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJuIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC45IiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjMwMCIgaGVpZ2h0PSIzMDAiIGZpbHRlcj0idXJsKCNuKSIgb3BhY2l0eT0iMSIvPjwvc3ZnPg==')]" />
-      </div>
-
       <Navbar />
 
       {/* ── Hero ── */}

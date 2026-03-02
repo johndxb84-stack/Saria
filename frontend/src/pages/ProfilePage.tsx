@@ -60,7 +60,7 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen text-white">
         <Navbar />
         <div className="flex items-center justify-center h-96">
           <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-600"></div>
@@ -77,26 +77,26 @@ export default function ProfilePage() {
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
-          <button onClick={() => navigate(dashboardPath)} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+          <button onClick={() => navigate(dashboardPath)} className="p-2 hover:bg-white/12 rounded-lg transition-colors text-white">
             <ArrowLeft className="w-5 h-5 text-gray-600" />
           </button>
           <div>
-            <h1 className="text-xl font-bold text-gray-900">My Profile</h1>
-            <p className="text-sm text-gray-500 capitalize">{user?.role} Account</p>
+            <h1 className="text-xl font-bold text-white">My Profile</h1>
+            <p className="text-sm text-white/60 capitalize">{user?.role} Account</p>
           </div>
         </div>
 
         {/* Profile avatar */}
         <div className="card flex items-center gap-4 mb-6">
-          <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center">
-            <span className="text-primary-700 text-2xl font-bold">
+          <div className="w-16 h-16 glass-pill rounded-full flex items-center justify-center">
+            <span className="text-white text-2xl font-bold">
               {profile?.first_name?.[0]}{profile?.last_name?.[0]}
             </span>
           </div>
           <div>
-            <h2 className="text-lg font-bold text-gray-900">{profile?.first_name} {profile?.last_name}</h2>
-            <p className="text-sm text-gray-500">{profile?.email}</p>
-            <p className="text-xs text-gray-400 mt-1 capitalize">
+            <h2 className="text-lg font-bold text-white">{profile?.first_name} {profile?.last_name}</h2>
+            <p className="text-sm text-white/60">{profile?.email}</p>
+            <p className="text-xs text-white/50 mt-1 capitalize">
               {profile?.role} · Member since {new Date(profile?.created_at).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}
             </p>
           </div>
@@ -105,16 +105,16 @@ export default function ProfilePage() {
         {/* Contact Info (patient only for editable) */}
         {user?.role === 'patient' && (
           <form onSubmit={handleProfileSave} className="card mb-6">
-            <h2 className="font-bold text-gray-900 mb-4">Personal Information</h2>
+            <h2 className="font-bold text-white mb-4">Personal Information</h2>
 
             {saveMsg && (
-              <div className="mb-4 flex items-center gap-2 bg-green-50 border border-green-200 rounded-xl p-3 text-sm text-green-700">
-                <CheckCircle className="w-4 h-4" /> {saveMsg}
+              <div className="mb-4 flex items-center gap-2 bg-green-400/15 border border-green-400/30 rounded-xl p-3 text-sm text-green-200">
+                <CheckCircle className="w-4 h-4 text-green-300" /> {saveMsg}
               </div>
             )}
             {saveError && (
-              <div className="mb-4 flex items-center gap-2 bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-700">
-                <AlertCircle className="w-4 h-4" /> {saveError}
+              <div className="mb-4 flex items-center gap-2 bg-red-400/15 border border-red-400/30 rounded-xl p-3 text-sm text-red-200">
+                <AlertCircle className="w-4 h-4 text-red-300" /> {saveError}
               </div>
             )}
 
@@ -161,23 +161,23 @@ export default function ProfilePage() {
         {/* View-only for doctor/nurse */}
         {user?.role !== 'patient' && (
           <div className="card mb-6">
-            <h2 className="font-bold text-gray-900 mb-4">Account Information</h2>
+            <h2 className="font-bold text-white mb-4">Account Information</h2>
             <div className="space-y-3 text-sm">
-              <div className="flex justify-between py-2 border-b border-gray-50">
-                <span className="text-gray-500">Name</span>
-                <span className="font-medium text-gray-900">{profile?.first_name} {profile?.last_name}</span>
+              <div className="flex justify-between py-2 border-b border-white/8">
+                <span className="text-white/55">Name</span>
+                <span className="font-medium text-white">{profile?.first_name} {profile?.last_name}</span>
               </div>
               <div className="flex justify-between py-2 border-b border-gray-50">
-                <span className="text-gray-500">Email</span>
-                <span className="font-medium text-gray-900">{profile?.email}</span>
+                <span className="text-white/55">Email</span>
+                <span className="font-medium text-white">{profile?.email}</span>
               </div>
               <div className="flex justify-between py-2 border-b border-gray-50">
-                <span className="text-gray-500">Phone</span>
-                <span className="font-medium text-gray-900">{profile?.phone || '—'}</span>
+                <span className="text-white/55">Phone</span>
+                <span className="font-medium text-white">{profile?.phone || '—'}</span>
               </div>
               <div className="flex justify-between py-2">
-                <span className="text-gray-500">Role</span>
-                <span className="font-medium text-gray-900 capitalize">{profile?.role}</span>
+                <span className="text-white/55">Role</span>
+                <span className="font-medium text-white capitalize">{profile?.role}</span>
               </div>
             </div>
           </div>
@@ -185,15 +185,15 @@ export default function ProfilePage() {
 
         {/* Change Password */}
         <form onSubmit={handlePasswordChange} className="card">
-          <h2 className="font-bold text-gray-900 mb-4">Change Password</h2>
+          <h2 className="font-bold text-white mb-4">Change Password</h2>
           {pwMsg && (
             <div className="mb-4 flex items-center gap-2 bg-green-50 border border-green-200 rounded-xl p-3 text-sm text-green-700">
-              <CheckCircle className="w-4 h-4" /> {pwMsg}
+              <CheckCircle className="w-4 h-4 text-green-300" /> {pwMsg}
             </div>
           )}
           {pwError && (
             <div className="mb-4 flex items-center gap-2 bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-700">
-              <AlertCircle className="w-4 h-4" /> {pwError}
+              <AlertCircle className="w-4 h-4 text-red-300" /> {pwError}
             </div>
           )}
           <div className="space-y-4">
@@ -201,7 +201,7 @@ export default function ProfilePage() {
               <label className="label">Current Password</label>
               <div className="relative">
                 <input type={showPw ? 'text' : 'password'} className="input-field pr-10" value={pwForm.current} onChange={e => setPwForm(f => ({ ...f, current: e.target.value }))} required />
-                <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" onClick={() => setShowPw(!showPw)}>
+                <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-white/45 hover:text-white/80" onClick={() => setShowPw(!showPw)}>
                   {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>

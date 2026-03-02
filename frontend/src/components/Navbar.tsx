@@ -22,96 +22,81 @@ export default function Navbar() {
 
   const isActive = (path: string) => location.pathname === path;
 
-  const scrollToSection = (sectionId: string) => {
+  const scrollToContact = () => {
     setMobileOpen(false);
     if (location.pathname === '/') {
-      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+      document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
     } else {
       navigate('/');
       setTimeout(() => {
-        document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+        document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
       }, 300);
     }
   };
 
-  const isHome = location.pathname === '/';
+  const linkCls = (active: boolean) =>
+    `px-3 py-2 text-sm rounded-lg font-medium transition-colors ${active ? 'bg-white/20 text-white' : 'text-white/80 hover:text-white hover:bg-white/12'}`;
 
   return (
-    <nav className={`sticky top-0 z-50 transition-all duration-300 ${isHome ? 'glass-nav' : 'bg-white border-b border-gray-200 shadow-sm'}`}>
+    <nav className="glass-nav sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
+
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 font-bold">
-            <div className={`w-9 h-9 rounded-full flex items-center justify-center ${isHome ? 'glass-pill' : 'bg-primary-600'}`}>
+          <Link to="/" className="flex items-center gap-2.5 font-bold">
+            <div className="w-9 h-9 glass-pill rounded-full flex items-center justify-center">
               <Heart className="w-5 h-5 text-white" />
             </div>
             <div className="hidden sm:block">
-              <div className={`text-sm font-bold leading-tight ${isHome ? 'text-white' : 'text-gray-900'}`}>Dr. Saria El Hachem</div>
-              <div className={`text-xs font-medium ${isHome ? 'text-white/60' : 'text-primary-600'}`}>Family Medicine · Dubai</div>
+              <div className="text-sm font-bold text-white leading-tight">Dr. Saria El Hachem</div>
+              <div className="text-xs text-white/60 font-medium">Family Medicine · Dubai</div>
             </div>
           </Link>
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-1">
-            <Link
-              to="/"
-              className={`px-3 py-2 text-sm rounded-lg font-medium transition-colors ${
-                isHome
-                  ? isActive('/') ? 'bg-white/15 text-white' : 'text-white/75 hover:text-white hover:bg-white/10'
-                  : isActive('/') ? 'bg-primary-50 text-primary-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-              }`}
-            >
-              About
-            </Link>
-            <button
-              onClick={() => scrollToSection('contact')}
-              className={`px-3 py-2 text-sm rounded-lg font-medium transition-colors ${
-                isHome ? 'text-white/75 hover:text-white hover:bg-white/10' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-              }`}
-            >
-              Contact
-            </button>
+            <Link to="/" className={linkCls(isActive('/'))}>About</Link>
+            <button onClick={scrollToContact} className={linkCls(false)}>Contact</button>
 
             {user ? (
               <div className="flex items-center gap-2 ml-4">
-                <Link
-                  to={dashboardPath}
-                  className={`flex items-center gap-1.5 px-3 py-2 text-sm rounded-lg font-medium transition-colors ${
-                    isHome
-                      ? location.pathname.startsWith(dashboardPath) ? 'bg-white/15 text-white' : 'text-white/75 hover:text-white hover:bg-white/10'
-                      : location.pathname.startsWith(dashboardPath) ? 'bg-primary-50 text-primary-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                  }`}
-                >
-                  <LayoutDashboard className="w-4 h-4" />
-                  Dashboard
+                <Link to={dashboardPath} className={linkCls(location.pathname.startsWith(dashboardPath))}>
+                  <span className="flex items-center gap-1.5">
+                    <LayoutDashboard className="w-4 h-4" />
+                    Dashboard
+                  </span>
                 </Link>
+
+                {/* User dropdown */}
                 <div className="relative">
                   <button
                     onClick={() => setDropdownOpen(!dropdownOpen)}
-                    className={`flex items-center gap-2 px-3 py-2 text-sm rounded-lg font-medium transition-colors ${
-                      isHome ? 'text-white/75 hover:text-white hover:bg-white/10' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                    }`}
+                    className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg font-medium text-white/80 hover:text-white hover:bg-white/12 transition-colors"
                   >
-                    <div className="w-7 h-7 bg-primary-100 rounded-full flex items-center justify-center">
-                      <span className="text-primary-700 text-xs font-bold">
+                    <div className="w-7 h-7 glass-pill rounded-full flex items-center justify-center">
+                      <span className="text-white text-xs font-bold">
                         {user.first_name[0]}{user.last_name[0]}
                       </span>
                     </div>
                     <span>{user.first_name}</span>
                     <ChevronDown className="w-3.5 h-3.5" />
                   </button>
+
                   {dropdownOpen && (
-                    <div className="absolute right-0 mt-1 w-52 bg-white rounded-xl shadow-lg border border-gray-100 py-1 z-50">
-                      <div className="px-4 py-2.5 border-b border-gray-100">
-                        <div className="text-sm font-semibold text-gray-900">{user.first_name} {user.last_name}</div>
-                        <div className="text-xs text-gray-500 capitalize flex items-center gap-1 mt-0.5">
-                          {user.role === 'doctor' && <Shield className="w-3 h-3 text-primary-500" />}
+                    <div className="absolute right-0 mt-1 w-52 glass rounded-xl py-1 z-50">
+                      {/* Top specular */}
+                      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent rounded-t-xl pointer-events-none" />
+
+                      <div className="px-4 py-2.5 border-b border-white/10">
+                        <div className="text-sm font-semibold text-white">{user.first_name} {user.last_name}</div>
+                        <div className="text-xs text-white/55 capitalize flex items-center gap-1 mt-0.5">
+                          {user.role === 'doctor' && <Shield className="w-3 h-3 text-sky-300" />}
                           {user.role}
                         </div>
                       </div>
                       <Link
                         to={`${dashboardPath}/profile`}
-                        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                        className="flex items-center gap-2 px-4 py-2 text-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors"
                         onClick={() => setDropdownOpen(false)}
                       >
                         <User className="w-4 h-4" />
@@ -120,7 +105,7 @@ export default function Navbar() {
                       {user.role === 'patient' && (
                         <Link
                           to="/patient/records"
-                          className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                          className="flex items-center gap-2 px-4 py-2 text-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors"
                           onClick={() => setDropdownOpen(false)}
                         >
                           <FileText className="w-4 h-4" />
@@ -130,17 +115,17 @@ export default function Navbar() {
                       {user.role === 'doctor' && (
                         <Link
                           to="/doctor/staff"
-                          className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                          className="flex items-center gap-2 px-4 py-2 text-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors"
                           onClick={() => setDropdownOpen(false)}
                         >
                           <Users className="w-4 h-4" />
                           Manage Staff
                         </Link>
                       )}
-                      <div className="border-t border-gray-100 mt-1">
+                      <div className="border-t border-white/10 mt-1">
                         <button
                           onClick={() => { handleLogout(); setDropdownOpen(false); }}
-                          className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                          className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-300 hover:bg-red-400/10 hover:text-red-200 transition-colors"
                         >
                           <LogOut className="w-4 h-4" />
                           Sign Out
@@ -152,24 +137,19 @@ export default function Navbar() {
               </div>
             ) : (
               <div className="flex items-center gap-2 ml-4">
-                {isHome ? (
-                  <>
-                    <Link to="/login" className="glass-pill px-4 py-2 rounded-lg text-sm font-medium text-white hover:bg-white/20 transition-all duration-200">Sign In</Link>
-                    <Link to="/register" className="glass-pill px-4 py-2 rounded-lg text-sm font-medium text-white hover:bg-white/20 transition-all duration-200">Patient Portal</Link>
-                  </>
-                ) : (
-                  <>
-                    <Link to="/login" className="btn-secondary text-sm">Sign In</Link>
-                    <Link to="/register" className="btn-primary text-sm">Patient Portal</Link>
-                  </>
-                )}
+                <Link to="/login" className="glass-pill px-4 py-2 rounded-lg text-sm font-medium text-white hover:bg-white/25 transition-all duration-200">
+                  Sign In
+                </Link>
+                <Link to="/register" className="glass-pill px-4 py-2 rounded-lg text-sm font-medium text-white hover:bg-white/25 transition-all duration-200">
+                  Patient Portal
+                </Link>
               </div>
             )}
           </div>
 
           {/* Mobile toggle */}
           <button
-            className={`md:hidden p-2 rounded-lg transition-colors ${isHome ? 'text-white hover:bg-white/10' : 'hover:bg-gray-100'}`}
+            className="md:hidden p-2 rounded-lg text-white hover:bg-white/12 transition-colors"
             onClick={() => setMobileOpen(!mobileOpen)}
           >
             {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -179,21 +159,21 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className={`md:hidden px-4 py-3 space-y-1 ${isHome ? 'glass-nav border-t border-white/10' : 'border-t border-gray-100 bg-white'}`}>
-          <Link to="/" className={`block px-3 py-2 text-sm rounded-lg ${isHome ? 'text-white/80 hover:bg-white/10' : 'text-gray-700 hover:bg-gray-50'}`} onClick={() => setMobileOpen(false)}>About</Link>
-          <button onClick={() => scrollToSection('contact')} className={`w-full text-left px-3 py-2 text-sm rounded-lg ${isHome ? 'text-white/80 hover:bg-white/10' : 'text-gray-700 hover:bg-gray-50'}`}>Contact</button>
+        <div className="md:hidden glass-nav border-t border-white/12 px-4 py-3 space-y-1">
+          <Link to="/" className="block px-3 py-2 text-sm rounded-lg text-white/80 hover:bg-white/12 hover:text-white" onClick={() => setMobileOpen(false)}>About</Link>
+          <button onClick={scrollToContact} className="w-full text-left px-3 py-2 text-sm rounded-lg text-white/80 hover:bg-white/12 hover:text-white">Contact</button>
           {user ? (
             <>
-              <Link to={dashboardPath} className={`block px-3 py-2 text-sm rounded-lg ${isHome ? 'text-white/80 hover:bg-white/10' : 'text-gray-700 hover:bg-gray-50'}`} onClick={() => setMobileOpen(false)}>Dashboard</Link>
-              <Link to={`${dashboardPath}/profile`} className={`block px-3 py-2 text-sm rounded-lg ${isHome ? 'text-white/80 hover:bg-white/10' : 'text-gray-700 hover:bg-gray-50'}`} onClick={() => setMobileOpen(false)}>Profile</Link>
-              <button onClick={() => { handleLogout(); setMobileOpen(false); }} className={`w-full text-left px-3 py-2 text-sm rounded-lg ${isHome ? 'text-red-300 hover:bg-white/10' : 'text-red-600 hover:bg-red-50'}`}>
+              <Link to={dashboardPath} className="block px-3 py-2 text-sm rounded-lg text-white/80 hover:bg-white/12 hover:text-white" onClick={() => setMobileOpen(false)}>Dashboard</Link>
+              <Link to={`${dashboardPath}/profile`} className="block px-3 py-2 text-sm rounded-lg text-white/80 hover:bg-white/12 hover:text-white" onClick={() => setMobileOpen(false)}>Profile</Link>
+              <button onClick={() => { handleLogout(); setMobileOpen(false); }} className="w-full text-left px-3 py-2 text-sm rounded-lg text-red-300 hover:bg-red-400/10">
                 Sign Out
               </button>
             </>
           ) : (
             <>
-              <Link to="/login" className={`block px-3 py-2 text-sm rounded-lg ${isHome ? 'text-white/80 hover:bg-white/10' : 'text-gray-700 hover:bg-gray-50'}`} onClick={() => setMobileOpen(false)}>Sign In</Link>
-              <Link to="/register" className={`block px-3 py-2 text-sm rounded-lg font-medium ${isHome ? 'glass-pill text-white' : 'bg-primary-600 text-white'}`} onClick={() => setMobileOpen(false)}>Patient Portal</Link>
+              <Link to="/login" className="block px-3 py-2 text-sm rounded-lg text-white/80 hover:bg-white/12 hover:text-white" onClick={() => setMobileOpen(false)}>Sign In</Link>
+              <Link to="/register" className="block px-3 py-2 text-sm rounded-lg glass-pill text-white font-medium" onClick={() => setMobileOpen(false)}>Patient Portal</Link>
             </>
           )}
         </div>

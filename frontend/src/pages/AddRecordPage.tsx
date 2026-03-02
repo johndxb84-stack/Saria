@@ -100,14 +100,14 @@ export default function AddRecordPage() {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen text-white">
         <Navbar />
         <div className="max-w-lg mx-auto px-4 py-16 text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <CheckCircle className="w-8 h-8 text-green-600" />
+          <div className="w-16 h-16 bg-green-400/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <CheckCircle className="w-8 h-8 text-green-300" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-3">Record Added!</h2>
-          <p className="text-gray-600 mb-6">The medical record has been saved successfully for {patient?.first_name} {patient?.last_name}.</p>
+          <h2 className="text-2xl font-bold text-white mb-3">Record Added!</h2>
+          <p className="text-white/65 mb-6">The medical record has been saved successfully for {patient?.first_name} {patient?.last_name}.</p>
           <div className="flex gap-3 justify-center">
             <button onClick={goBack} className="btn-primary">View Patient Records</button>
             <button onClick={() => { setSuccess(false); setForm({ record_type: 'consultation', title: '', description: '', date: new Date().toISOString().slice(0, 10) }); }} className="btn-secondary">
@@ -125,21 +125,21 @@ export default function AddRecordPage() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
-          <button onClick={goBack} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+          <button onClick={goBack} className="p-2 hover:bg-white/12 rounded-lg transition-colors text-white">
             <ArrowLeft className="w-5 h-5 text-gray-600" />
           </button>
           <div>
-            <h1 className="text-xl font-bold text-gray-900">Add Medical Record</h1>
-            {patient && <p className="text-sm text-gray-500">For: {patient.first_name} {patient.last_name}</p>}
+            <h1 className="text-xl font-bold text-white">Add Medical Record</h1>
+            {patient && <p className="text-sm text-white/60">For: {patient.first_name} {patient.last_name}</p>}
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Base Info */}
           <div className="card">
-            <h2 className="font-bold text-gray-900 mb-4">Record Details</h2>
+            <h2 className="font-bold text-white mb-4">Record Details</h2>
             {error && (
-              <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-700">{error}</div>
+              <div className="mb-4 bg-red-400/15 border border-red-400/30 rounded-lg p-3 text-sm text-red-200">{error}</div>
             )}
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
@@ -179,7 +179,7 @@ export default function AddRecordPage() {
               <div className="flex items-center justify-between mb-4">
                 <h2 className="font-bold text-gray-900">Blood Test Results</h2>
                 <button type="button" onClick={() => setBloodRows(r => [...r, { test_name: '', value: '', unit: '', reference_range: '', status: '', notes: '' }])}
-                  className="text-sm text-primary-600 hover:text-primary-700 flex items-center gap-1">
+                  className="text-sm text-sky-200 hover:text-white flex items-center gap-1">
                   <Plus className="w-4 h-4" /> Add Row
                 </button>
               </div>
@@ -187,19 +187,19 @@ export default function AddRecordPage() {
                 {bloodRows.map((row, i) => (
                   <div key={i} className="grid grid-cols-6 gap-2 items-end">
                     <div className="col-span-2">
-                      {i === 0 && <label className="label text-xs">Test Name</label>}
+                      {i === 0 && <label className="label text-xs text-white/70">Test Name</label>}
                       <input type="text" className="input-field text-sm py-2" placeholder="e.g. Hemoglobin" value={row.test_name} onChange={e => updateBlood(i, 'test_name', e.target.value)} />
                     </div>
                     <div>
-                      {i === 0 && <label className="label text-xs">Value</label>}
+                      {i === 0 && <label className="label text-xs text-white/70">Value</label>}
                       <input type="text" className="input-field text-sm py-2" placeholder="13.5" value={row.value} onChange={e => updateBlood(i, 'value', e.target.value)} />
                     </div>
                     <div>
-                      {i === 0 && <label className="label text-xs">Unit</label>}
+                      {i === 0 && <label className="label text-xs text-white/70">Unit</label>}
                       <input type="text" className="input-field text-sm py-2" placeholder="g/dL" value={row.unit} onChange={e => updateBlood(i, 'unit', e.target.value)} />
                     </div>
                     <div>
-                      {i === 0 && <label className="label text-xs">Status</label>}
+                      {i === 0 && <label className="label text-xs text-white/70">Status</label>}
                       <select className="input-field text-sm py-2" value={row.status} onChange={e => updateBlood(i, 'status', e.target.value)}>
                         <option value="">Normal</option>
                         <option value="normal">Normal</option>
@@ -209,7 +209,7 @@ export default function AddRecordPage() {
                       </select>
                     </div>
                     <div>
-                      {i === 0 && <label className="label text-xs">&nbsp;</label>}
+                      {i === 0 && <label className="label text-xs text-white/70">&nbsp;</label>}
                       {bloodRows.length > 1 && (
                         <button type="button" onClick={() => setBloodRows(r => r.filter((_, idx) => idx !== i))} className="p-2 text-red-400 hover:text-red-600">
                           <Trash2 className="w-4 h-4" />
@@ -228,12 +228,12 @@ export default function AddRecordPage() {
               <div className="flex items-center justify-between mb-4">
                 <h2 className="font-bold text-gray-900">Medications</h2>
                 <button type="button" onClick={() => setRxRows(r => [...r, { medication_name: '', dosage: '', frequency: '', duration: '', instructions: '', refills: 0 }])}
-                  className="text-sm text-primary-600 hover:text-primary-700 flex items-center gap-1">
+                  className="text-sm text-sky-200 hover:text-white flex items-center gap-1">
                   <Plus className="w-4 h-4" /> Add Medication
                 </button>
               </div>
               {rxRows.map((row, i) => (
-                <div key={i} className={`${i > 0 ? 'pt-4 mt-4 border-t border-gray-100' : ''}`}>
+                <div key={i} className={`${i > 0 ? 'pt-4 mt-4 border-t border-white/10' : ''}`}>
                   <div className="grid sm:grid-cols-3 gap-3">
                     <div className="sm:col-span-2">
                       <label className="label text-xs">Medication Name</label>
@@ -274,8 +274,8 @@ export default function AddRecordPage() {
 
           {/* File Upload */}
           <div className="card">
-            <h2 className="font-bold text-gray-900 mb-4">Attach File (Optional)</h2>
-            <p className="text-sm text-gray-500 mb-4">Upload X-rays, scans, lab reports, or other documents (max 50MB, PDF/JPG/PNG)</p>
+            <h2 className="font-bold text-white mb-4">Attach File (Optional)</h2>
+            <p className="text-sm text-white/60 mb-4">Upload X-rays, scans, lab reports, or other documents (max 50MB, PDF/JPG/PNG)</p>
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
                 <label className="label">File Category</label>
@@ -293,10 +293,10 @@ export default function AddRecordPage() {
                 <input type="text" className="input-field" placeholder="e.g. Chest PA view" value={fileDescription} onChange={e => setFileDescription(e.target.value)} />
               </div>
               <div className="sm:col-span-2">
-                <label className="block border-2 border-dashed border-gray-200 rounded-xl p-6 text-center cursor-pointer hover:border-primary-400 hover:bg-primary-50 transition-colors">
-                  <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                  <p className="text-sm text-gray-600 font-medium">{uploadFile ? uploadFile.name : 'Click to upload or drag & drop'}</p>
-                  <p className="text-xs text-gray-400 mt-1">PDF, JPG, PNG, DICOM up to 50MB</p>
+                <label className="block border-2 border-dashed border-white/25 rounded-xl p-6 text-center cursor-pointer hover:border-sky-300 hover:bg-sky-400/10 transition-colors">
+                  <Upload className="w-8 h-8 text-white/40 mx-auto mb-2" />
+                  <p className="text-sm text-white/80 font-medium">{uploadFile ? uploadFile.name : 'Click to upload or drag & drop'}</p>
+                  <p className="text-xs text-white/50 mt-1">PDF, JPG, PNG, DICOM up to 50MB</p>
                   <input type="file" className="hidden" accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,.doc,.docx" onChange={e => setUploadFile(e.target.files?.[0] || null)} />
                 </label>
               </div>

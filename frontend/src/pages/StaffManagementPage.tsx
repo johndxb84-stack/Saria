@@ -57,7 +57,7 @@ export default function StaffManagementPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen text-white">
         <Navbar />
         <div className="flex items-center justify-center h-96">
           <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-600"></div>
@@ -71,12 +71,12 @@ export default function StaffManagementPage() {
       <Navbar />
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-center gap-3 mb-6">
-          <button onClick={() => navigate('/doctor')} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+          <button onClick={() => navigate('/doctor')} className="p-2 hover:bg-white/12 rounded-lg transition-colors text-white">
             <ArrowLeft className="w-5 h-5 text-gray-600" />
           </button>
           <div className="flex-1">
-            <h1 className="text-xl font-bold text-gray-900">Staff Management</h1>
-            <p className="text-sm text-gray-500">Manage nurse accounts and portal access</p>
+            <h1 className="text-xl font-bold text-white">Staff Management</h1>
+            <p className="text-sm text-white/60">Manage nurse accounts and portal access</p>
           </div>
           <button onClick={() => setShowForm(!showForm)} className="btn-primary flex items-center gap-2 text-sm">
             <Plus className="w-4 h-4" />
@@ -86,12 +86,12 @@ export default function StaffManagementPage() {
 
         {/* Messages */}
         {msg && (
-          <div className="mb-5 flex items-center gap-2 bg-green-50 border border-green-200 rounded-xl p-4 text-sm text-green-700">
+          <div className="mb-5 flex items-center gap-2 bg-green-400/15 border border-green-400/30 rounded-xl p-4 text-sm text-green-200">
             <CheckCircle className="w-4 h-4" /> {msg}
           </div>
         )}
         {error && (
-          <div className="mb-5 flex items-center gap-2 bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700">
+          <div className="mb-5 flex items-center gap-2 bg-red-400/15 border border-red-400/30 rounded-xl p-4 text-sm text-red-200">
             <AlertCircle className="w-4 h-4" /> {error}
           </div>
         )}
@@ -99,7 +99,7 @@ export default function StaffManagementPage() {
         {/* Add nurse form */}
         {showForm && (
           <form onSubmit={handleCreate} className="card mb-6">
-            <h2 className="font-bold text-gray-900 mb-4">Create Nurse Account</h2>
+            <h2 className="font-bold text-white mb-4">Create Nurse Account</h2>
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
                 <label className="label">First Name *</label>
@@ -121,11 +121,11 @@ export default function StaffManagementPage() {
                 <label className="label">Password * (min. 8 chars)</label>
                 <div className="relative">
                   <input type={showPw ? 'text' : 'password'} className="input-field pr-10" value={form.password} onChange={set('password')} required minLength={8} />
-                  <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" onClick={() => setShowPw(!showPw)}>
+                  <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-white/45 hover:text-white/80" onClick={() => setShowPw(!showPw)}>
                     {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
-                <p className="text-xs text-gray-500 mt-1">Share this password securely with the nurse. They can change it after first login.</p>
+                <p className="text-xs text-white/55 mt-1">Share this password securely with the nurse. They can change it after first login.</p>
               </div>
             </div>
             <div className="flex gap-3 mt-4">
@@ -139,28 +139,28 @@ export default function StaffManagementPage() {
 
         {/* Staff list */}
         <div className="card">
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex items-center gap-2 mb-4 text-white">
             <Users className="w-5 h-5 text-gray-600" />
-            <h2 className="font-bold text-gray-900">Nursing Staff ({staff.length})</h2>
+            <h2 className="font-bold text-white">Nursing Staff ({staff.length})</h2>
           </div>
 
           {staff.length === 0 ? (
-            <div className="text-center py-12 text-gray-400">
+            <div className="text-center py-12 text-white/40">
               <Users className="w-10 h-10 mx-auto mb-3 opacity-40" />
               <p className="text-sm">No nurses added yet. Click "Add Nurse" to create an account.</p>
             </div>
           ) : (
             <div className="space-y-3">
               {staff.map(s => (
-                <div key={s.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100">
+                <div key={s.id} className="flex items-center justify-between p-4 glass-pill rounded-xl">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                      <span className="text-blue-700 font-bold text-sm">{s.first_name[0]}{s.last_name[0]}</span>
+                    <div className="w-10 h-10 glass rounded-full flex items-center justify-center">
+                      <span className="text-white font-bold text-sm">{s.first_name[0]}{s.last_name[0]}</span>
                     </div>
                     <div>
-                      <p className="font-semibold text-gray-900 text-sm">{s.first_name} {s.last_name}</p>
-                      <p className="text-xs text-gray-500">{s.email}</p>
-                      {s.phone && <p className="text-xs text-gray-400">{s.phone}</p>}
+                      <p className="font-semibold text-white text-sm">{s.first_name} {s.last_name}</p>
+                      <p className="text-xs text-white/55">{s.email}</p>
+                      {s.phone && <p className="text-xs text-white/45">{s.phone}</p>}
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
@@ -170,7 +170,7 @@ export default function StaffManagementPage() {
                     {s.is_active && (
                       <button
                         onClick={() => deactivate(s.id)}
-                        className="text-xs text-red-500 hover:text-red-700 font-medium px-3 py-1 border border-red-200 rounded-lg hover:bg-red-50 transition-colors"
+                        className="text-xs text-red-300 hover:text-white font-medium px-3 py-1 border border-red-400/30 rounded-lg hover:bg-red-400/15 transition-colors"
                       >
                         Deactivate
                       </button>
@@ -183,9 +183,9 @@ export default function StaffManagementPage() {
         </div>
 
         {/* Role descriptions */}
-        <div className="mt-6 card bg-blue-50 border-blue-100">
-          <h3 className="font-semibold text-gray-900 mb-3 text-sm">Access Levels</h3>
-          <div className="space-y-2 text-sm text-gray-600">
+        <div className="mt-6 card border-sky-400/20" style={{background:"rgba(56,189,248,0.08)"">
+          <h3 className="font-semibold text-white mb-3 text-sm">Access Levels</h3>
+          <div className="space-y-2 text-sm text-white/75">
             <div className="flex items-start gap-2">
               <span className="badge-blue mt-0.5">Doctor</span>
               <span>Full access — view all patients, approve registrations, manage records, add/remove staff</span>
