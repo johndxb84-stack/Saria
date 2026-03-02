@@ -183,7 +183,7 @@ export default function StaffManagementPage() {
         </div>
 
         {/* Role descriptions */}
-        <div className="mt-6 card border-sky-400/20" style={{background:"rgba(56,189,248,0.08)"">
+        <div className="mt-6 card border-sky-400/20" style={{background:"rgba(56,189,248,0.08)"}}>
           <h3 className="font-semibold text-white mb-3 text-sm">Access Levels</h3>
           <div className="space-y-2 text-sm text-white/75">
             <div className="flex items-start gap-2">

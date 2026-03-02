@@ -301,7 +301,7 @@ export default function DoctorDashboard() {
 
         {/* Pending approvals */}
         {pending.length > 0 && (
-          <div className="card mb-6 border-yellow-400/25" style={{background:"rgba(250,204,21,0.08)"">
+          <div className="card mb-6 border-yellow-400/25" style={{background:"rgba(250,204,21,0.08)"}}>
             <div className="flex items-center gap-3 mb-5">
               <div className="w-8 h-8 bg-yellow-400/20 rounded-full flex items-center justify-center">
                 <Bell className="w-4 h-4 text-yellow-300" />

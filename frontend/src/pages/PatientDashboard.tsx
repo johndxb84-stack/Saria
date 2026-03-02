@@ -155,7 +155,7 @@ export default function PatientDashboard() {
 
             {/* Last Visit */}
             {summary?.last_visit && (
-              <div className="card border-sky-300/20" style={{background:"rgba(56,189,248,0.12)"">
+              <div className="card border-sky-300/20" style={{background:"rgba(56,189,248,0.12)"}}>
                 <div className="flex items-center gap-3 mb-2">
                   <Calendar className="w-5 h-5 text-sky-300" />
                   <h3 className="font-semibold text-white text-sm">Last Visit</h3>
@@ -167,7 +167,7 @@ export default function PatientDashboard() {
             )}
 
             {/* Privacy Notice */}
-            <div className="card border-green-400/20" style={{background:"rgba(74,222,128,0.10)"">
+            <div className="card border-green-400/20" style={{background:"rgba(74,222,128,0.10)"}}>
               <div className="flex items-start gap-3">
                 <Shield className="w-5 h-5 text-green-300 flex-shrink-0 mt-0.5" />
                 <div>
