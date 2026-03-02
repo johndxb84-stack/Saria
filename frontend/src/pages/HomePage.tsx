@@ -137,11 +137,7 @@ export default function HomePage() {
               </div>
               <h3 className="font-bold text-gray-900 mb-3">Clinic Locations</h3>
               <p className="text-primary-600 font-semibold text-sm mb-1">Jumeirah American Clinic (JAC)</p>
-              <p className="text-gray-600 text-sm mb-3">Al Wasl Branch · Dubai, UAE</p>
-              <div className="border-t border-gray-100 pt-3">
-                <p className="text-gray-600 text-sm">Suite 11B, The Village Mall</p>
-                <p className="text-gray-600 text-sm">Jumeirah Road, Dubai</p>
-              </div>
+              <p className="text-gray-600 text-sm">Al Wasl Branch · Dubai, UAE</p>
             </div>
             <div className="card text-center hover:shadow-md transition-shadow">
               <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4">

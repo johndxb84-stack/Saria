@@ -54,9 +54,6 @@ export default function Navbar() {
             <Link to="/" className={`px-3 py-2 text-sm rounded-lg font-medium transition-colors ${isActive('/') ? 'bg-primary-50 text-primary-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}`}>
               About
             </Link>
-            <button onClick={() => scrollToSection('services')} className="px-3 py-2 text-sm rounded-lg font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors">
-              Services
-            </button>
             <button onClick={() => scrollToSection('contact')} className="px-3 py-2 text-sm rounded-lg font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors">
               Contact
             </button>
@@ -149,7 +146,6 @@ export default function Navbar() {
       {mobileOpen && (
         <div className="md:hidden border-t border-gray-100 bg-white px-4 py-3 space-y-1">
           <Link to="/" className="block px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-gray-50" onClick={() => setMobileOpen(false)}>About</Link>
-          <button onClick={() => scrollToSection('services')} className="w-full text-left px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-gray-50">Services</button>
           <button onClick={() => scrollToSection('contact')} className="w-full text-left px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-gray-50">Contact</button>
           {user ? (
             <>
