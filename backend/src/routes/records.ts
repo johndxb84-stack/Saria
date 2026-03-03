@@ -115,7 +115,7 @@ router.post('/', requireRole('doctor', 'nurse'), async (req: AuthRequest, res: R
 
     // Send email notification to patient (non-blocking)
     pool.query('SELECT first_name, last_name, email FROM users WHERE id = $1', [patient_id])
-      .then(async (patientRes) => {
+      .then(async (patientRes: { rows: any[] }) => {
         if (patientRes.rows.length === 0) return;
         const patient = patientRes.rows[0];
         const creatorRes = await pool.query(
@@ -132,7 +132,7 @@ router.post('/', requireRole('doctor', 'nurse'), async (req: AuthRequest, res: R
           created_by_name: creatorName,
         });
       })
-      .catch((emailErr) => console.error('Record notification email failed:', emailErr));
+      .catch((emailErr: unknown) => console.error('Record notification email failed:', emailErr));
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to create record' });
