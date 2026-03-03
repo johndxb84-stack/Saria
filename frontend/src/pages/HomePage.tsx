@@ -9,7 +9,13 @@ import {
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen text-white relative overflow-x-hidden">
+    <div className="min-h-screen text-white relative overflow-x-hidden" style={{background:"linear-gradient(135deg,#0ea5e9 0%,#3b82f6 50%,#6366f1 100%)"}}>
+      {/* Background orbs */}
+      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+        <div className="absolute -top-32 -left-32 w-[620px] h-[620px] rounded-full bg-sky-200/45 blur-[130px]" />
+        <div className="absolute top-1/3 -right-24 w-[500px] h-[500px] rounded-full bg-blue-200/38 blur-[110px]" />
+        <div className="absolute bottom-0 left-1/4 w-[520px] h-[520px] rounded-full bg-cyan-200/35 blur-[120px]" />
+      </div>
 
       <Navbar />
 

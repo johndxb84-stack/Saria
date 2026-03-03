@@ -22,15 +22,15 @@ const RECORD_ICONS: Record<string, React.ReactNode> = {
 };
 
 const RECORD_COLORS: Record<string, string> = {
-  consultation: 'bg-sky-400/20 text-sky-200',
-  blood_test: 'bg-red-400/20 text-red-200',
-  xray: 'bg-purple-400/20 text-purple-200',
-  prescription: 'bg-green-400/20 text-green-200',
-  vaccination: 'bg-yellow-400/20 text-yellow-200',
-  allergy: 'bg-orange-400/20 text-orange-200',
-  surgery: 'bg-pink-400/20 text-pink-200',
-  note: 'bg-white/12 text-white/65',
-  other: 'bg-white/12 text-white/65',
+  consultation: 'bg-sky-50 text-sky-600',
+  blood_test: 'bg-red-50 text-red-600',
+  xray: 'bg-purple-50 text-purple-600',
+  prescription: 'bg-emerald-50 text-emerald-600',
+  vaccination: 'bg-amber-50 text-amber-600',
+  allergy: 'bg-orange-50 text-orange-600',
+  surgery: 'bg-pink-50 text-pink-600',
+  note: 'bg-gray-100 text-gray-500',
+  other: 'bg-gray-100 text-gray-500',
 };
 
 export default function PatientDashboard() {
@@ -52,25 +52,25 @@ export default function PatientDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen text-white">
+      <div className="min-h-screen text-gray-900">
         <Navbar />
         <div className="flex items-center justify-center h-96">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-white/60"></div>
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-sky-500"></div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen text-white">
+    <div className="min-h-screen text-gray-900">
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Welcome */}
         <div className="mb-8">
-          <h1 className="text-2xl lg:text-3xl font-bold text-white">
+          <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">
             Welcome, {user?.first_name} 👋
           </h1>
-          <p className="text-white/60 mt-1">Your health records are secure and up to date</p>
+          <p className="text-gray-500 mt-1">Your health records are secure and up to date</p>
         </div>
 
         {/* Stats */}
@@ -78,14 +78,14 @@ export default function PatientDashboard() {
           {[
             { label: 'Total Records', value: summary?.total_records || 0, icon: FileText, color: 'bg-sky-400', bg: 'bg-sky-400/20' },
             { label: 'Files & Scans', value: summary?.total_files || 0, icon: Image, color: 'bg-purple-400', bg: 'bg-purple-400/20' },
-            { label: 'Blood Tests', value: summary?.by_type?.find(t => t.record_type === 'blood_test')?.count || 0, icon: FlaskConical, color: 'bg-red-400', bg: 'bg-red-400/20' },
+            { label: 'Blood Tests', value: summary?.by_type?.find(t => t.record_type === 'blood_test')?.count || 0, icon: FlaskConical, color: 'bg-red-400', bg: 'bg-red-50' },
             { label: 'Consultations', value: summary?.by_type?.find(t => t.record_type === 'consultation')?.count || 0, icon: Activity, color: 'bg-green-400', bg: 'bg-green-400/20' },
           ].map(({ label, value, icon: Icon, color, bg }) => (
             <div key={label} className="card">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-sm text-white/65 font-medium">{label}</p>
-                  <p className="text-3xl font-bold text-white mt-1">{value}</p>
+                  <p className="text-sm text-gray-500 font-medium">{label}</p>
+                  <p className="text-3xl font-bold text-gray-900 mt-1">{value}</p>
                 </div>
                 <div className={`w-10 h-10 ${bg} rounded-xl flex items-center justify-center`}>
                   <Icon className={`w-5 h-5 ${color.replace('bg-', 'text-').replace('/20', '')}`} />
@@ -99,26 +99,26 @@ export default function PatientDashboard() {
           {/* Recent Records */}
           <div className="lg:col-span-2 card">
             <div className="flex items-center justify-between mb-5">
-              <h2 className="font-bold text-white">Recent Records</h2>
-              <Link to="/patient/records" className="text-sm text-sky-200 hover:text-white flex items-center gap-1 font-medium">
+              <h2 className="font-bold text-gray-900">Recent Records</h2>
+              <Link to="/patient/records" className="text-sm text-sky-600 hover:text-sky-800 flex items-center gap-1 font-medium">
                 View all <ChevronRight className="w-4 h-4" />
               </Link>
             </div>
             {recentRecords.length === 0 ? (
-              <div className="text-center py-12 text-white/40">
+              <div className="text-center py-12 text-gray-400">
                 <FileText className="w-10 h-10 mx-auto mb-3 opacity-50" />
                 <p className="text-sm">No records yet. Your doctor will add records after your visit.</p>
               </div>
             ) : (
               <div className="space-y-3">
                 {recentRecords.map(record => (
-                  <div key={record.id} className="flex items-center gap-4 p-3 rounded-xl hover:bg-white/10 transition-colors border border-white/10">
-                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${RECORD_COLORS[record.record_type] || 'bg-white/12 text-white/65'}`}>
+                  <div key={record.id} className="flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors border border-gray-100">
+                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${RECORD_COLORS[record.record_type] || 'bg-gray-100 text-gray-500'}`}>
                       {RECORD_ICONS[record.record_type]}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-white text-sm truncate">{record.title}</p>
-                      <p className="text-xs text-white/55 mt-0.5">
+                      <p className="font-medium text-gray-900 text-sm truncate">{record.title}</p>
+                      <p className="text-xs text-gray-500 mt-0.5">
                         {new Date(record.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
                         {record.created_by_name && ` · ${record.created_by_name}`}
                       </p>
@@ -135,19 +135,19 @@ export default function PatientDashboard() {
           {/* Quick Actions & Info */}
           <div className="space-y-5">
             <div className="card">
-              <h2 className="font-bold text-white mb-4">Quick Access</h2>
+              <h2 className="font-bold text-gray-900 mb-4">Quick Access</h2>
               <div className="space-y-2">
                 {[
-                  { to: '/patient/records', icon: FileText, label: 'All Medical Records', color: 'text-sky-300' },
-                  { to: '/patient/records', icon: FlaskConical, label: 'Blood Test Results', color: 'text-red-300' },
-                  { to: '/patient/records', icon: Image, label: 'X-Rays & Scans', color: 'text-purple-300' },
-                  { to: '/patient/records', icon: Pill, label: 'Prescriptions', color: 'text-green-300' },
-                  { to: '/patient/profile', icon: User, label: 'My Profile', color: 'text-white/70' },
+                  { to: '/patient/records', icon: FileText, label: 'All Medical Records', color: 'text-sky-600' },
+                  { to: '/patient/records', icon: FlaskConical, label: 'Blood Test Results', color: 'text-red-500' },
+                  { to: '/patient/records', icon: Image, label: 'X-Rays & Scans', color: 'text-purple-600' },
+                  { to: '/patient/records', icon: Pill, label: 'Prescriptions', color: 'text-emerald-600' },
+                  { to: '/patient/profile', icon: User, label: 'My Profile', color: 'text-gray-600' },
                 ].map(({ to, icon: Icon, label, color }) => (
-                  <Link key={label} to={to} className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/10 transition-colors group">
+                  <Link key={label} to={to} className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-gray-50 transition-colors group">
                     <Icon className={`w-4 h-4 ${color}`} />
-                    <span className="text-sm text-white/80 group-hover:text-white">{label}</span>
-                    <ChevronRight className="w-3.5 h-3.5 text-white/40 ml-auto" />
+                    <span className="text-sm text-gray-700 group-hover:text-gray-900">{label}</span>
+                    <ChevronRight className="w-3.5 h-3.5 text-gray-400 ml-auto" />
                   </Link>
                 ))}
               </div>
@@ -155,24 +155,24 @@ export default function PatientDashboard() {
 
             {/* Last Visit */}
             {summary?.last_visit && (
-              <div className="card border-sky-300/20" style={{background:"rgba(56,189,248,0.12)"}}>
+              <div className="card border-sky-200" style={{background:"#f0f9ff"}}>
                 <div className="flex items-center gap-3 mb-2">
-                  <Calendar className="w-5 h-5 text-sky-300" />
-                  <h3 className="font-semibold text-white text-sm">Last Visit</h3>
+                  <Calendar className="w-5 h-5 text-sky-600" />
+                  <h3 className="font-semibold text-gray-900 text-sm">Last Visit</h3>
                 </div>
-                <p className="text-white font-bold">
+                <p className="text-gray-900 font-bold">
                   {new Date(summary.last_visit.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
                 </p>
               </div>
             )}
 
             {/* Privacy Notice */}
-            <div className="card border-green-400/20" style={{background:"rgba(74,222,128,0.10)"}}>
+            <div className="card border-emerald-200" style={{background:"#ecfdf5"}}>
               <div className="flex items-start gap-3">
-                <Shield className="w-5 h-5 text-green-300 flex-shrink-0 mt-0.5" />
+                <Shield className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-sm font-semibold text-white">Your Data is Private</p>
-                  <p className="text-xs text-white/65 mt-1">
+                  <p className="text-sm font-semibold text-gray-900">Your Data is Private</p>
+                  <p className="text-xs text-gray-500 mt-1">
                     Only you and Dr. El Hachem's authorized team can access your records.
                   </p>
                 </div>

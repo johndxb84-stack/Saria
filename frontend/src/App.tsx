@@ -21,7 +21,7 @@ function ProtectedRoute({ children, roles }: { children: React.ReactNode; roles?
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-white/60"></div>
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-sky-500"></div>
       </div>
     );
   }
@@ -41,15 +41,6 @@ function DashboardRedirect() {
 function App() {
   return (
     <AuthProvider>
-      {/* ── Global liquid-glass background (lighter blue) ── */}
-      <div className="fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-sky-400 via-blue-500 to-indigo-600" />
-        <div className="orb   absolute -top-32  -left-32  w-[620px] h-[620px] rounded-full bg-sky-200/45   blur-[130px]" />
-        <div className="orb-2 absolute top-1/3  -right-24  w-[500px] h-[500px] rounded-full bg-blue-200/38  blur-[110px]" />
-        <div className="orb-3 absolute bottom-0 left-1/4   w-[520px] h-[520px] rounded-full bg-cyan-200/35  blur-[120px]" />
-        <div className="orb-4 absolute -bottom-20 right-1/3 w-[380px] h-[380px] rounded-full bg-white/22   blur-[90px]" />
-      </div>
-
       <BrowserRouter>
         <Routes>
           {/* Public routes */}
