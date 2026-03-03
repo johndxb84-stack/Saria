@@ -2,6 +2,7 @@ import { Router, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import pool from '../db/database';
 import { authenticate, requireRole, AuthRequest, auditLog } from '../middleware/auth';
+import { sendNewRecordNotification } from '../services/email';
 
 const router = Router();
 router.use(authenticate);
@@ -111,6 +112,27 @@ router.post('/', requireRole('doctor', 'nurse'), async (req: AuthRequest, res: R
     }
 
     res.status(201).json({ message: 'Record created', id: recordId });
+
+    // Send email notification to patient (non-blocking)
+    pool.query('SELECT first_name, last_name, email FROM users WHERE id = $1', [patient_id])
+      .then(async (patientRes) => {
+        if (patientRes.rows.length === 0) return;
+        const patient = patientRes.rows[0];
+        const creatorRes = await pool.query(
+          'SELECT first_name, last_name FROM users WHERE id = $1',
+          [req.user!.id]
+        );
+        const creatorName = creatorRes.rows.length > 0
+          ? `${creatorRes.rows[0].first_name} ${creatorRes.rows[0].last_name}`
+          : 'Medical Team';
+        await sendNewRecordNotification(patient, {
+          title: title.trim(),
+          record_type,
+          date,
+          created_by_name: creatorName,
+        });
+      })
+      .catch((emailErr) => console.error('Record notification email failed:', emailErr));
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to create record' });

@@ -276,7 +276,77 @@ export async function sendPasswordResetEmail(user: {
   });
 }
 
-// ─── 6. Patient → Account Reactivated ────────────────────────────────────────
+// ─── 6. Patient → New Record Notification ────────────────────────────────────
+
+const RECORD_TYPE_LABELS: Record<string, string> = {
+  consultation: 'Consultation',
+  blood_test: 'Blood Test Results',
+  xray: 'X-Ray / Radiology Scan',
+  prescription: 'Prescription',
+  vaccination: 'Vaccination Record',
+  allergy: 'Allergy Record',
+  surgery: 'Surgery Record',
+  note: 'Clinical Note',
+  other: 'Medical Record',
+};
+
+export async function sendNewRecordNotification(patient: {
+  first_name: string; last_name: string; email: string;
+}, record: {
+  title: string; record_type: string; date: string; created_by_name: string;
+}): Promise<void> {
+  if (!process.env.RESEND_API_KEY) return;
+
+  const typeLabel = RECORD_TYPE_LABELS[record.record_type] || 'Medical Record';
+  const formattedDate = new Date(record.date).toLocaleDateString('en-AE', {
+    day: 'numeric', month: 'long', year: 'numeric',
+  });
+
+  const html = layout(`
+    <div style="text-align:center;margin-bottom:28px;">
+      <div style="display:inline-block;background:#eff6ff;border-radius:50%;width:60px;height:60px;line-height:60px;font-size:28px;margin-bottom:12px;">📋</div>
+      <h2 style="margin:0 0 8px;color:#111827;font-size:20px;font-weight:700;">New Results Available</h2>
+      <p style="margin:0;color:#6b7280;font-size:14px;">A new record has been added to your patient portal</p>
+    </div>
+
+    <p style="margin:0 0 20px;color:#374151;font-size:14px;line-height:1.7;">
+      Dear <strong>${patient.first_name}</strong>,<br/>
+      Your medical team has added a new record to your patient portal. You can now log in to view it securely.
+    </p>
+
+    <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:20px;margin-bottom:24px;">
+      <table style="width:100%;border-collapse:collapse;">
+        ${infoRow('Record type', typeLabel)}
+        ${infoRow('Title', record.title)}
+        ${infoRow('Date', formattedDate)}
+        ${infoRow('Added by', record.created_by_name)}
+      </table>
+    </div>
+
+    ${button('View My Results', `${PORTAL_URL}/login`, '#2563eb')}
+
+    <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:16px;margin-top:8px;">
+      <p style="margin:0;color:#1e40af;font-size:13px;line-height:1.6;">
+        🔒 Your records are encrypted and only accessible to you and Dr. El Hachem's authorized medical team.
+        Sign in with your registered email and password to view your results.
+      </p>
+    </div>
+
+    ${divider()}
+    <p style="margin:0;color:#9ca3af;font-size:12px;text-align:center;">
+      This notification was sent to: <strong>${patient.email}</strong>
+    </p>
+  `);
+
+  await resend.emails.send({
+    from: FROM,
+    to: patient.email,
+    subject: `New ${typeLabel} Available — Dr. Saria El Hachem Patient Portal`,
+    html,
+  });
+}
+
+// ─── 7. Patient → Account Reactivated ────────────────────────────────────────
 
 export async function sendReactivationNotification(patient: {
   first_name: string; last_name: string; email: string;
