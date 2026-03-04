@@ -70,38 +70,38 @@ export default function HomePage() {
 
             {/* Right – doctor card */}
             <div className="flex justify-center lg:justify-end">
-              <div className="w-full max-w-sm lg:max-w-md">
-                <div className="bg-gray-50 border border-gray-100 rounded-3xl p-9 shadow-sm">
-                  <div className="flex items-center gap-4 mb-6 pb-6 border-b border-gray-100">
-                    <div className="w-20 h-20 bg-sky-100 border-2 border-sky-200 rounded-2xl flex items-center justify-center flex-shrink-0">
-                      <Stethoscope className="w-10 h-10 text-sky-600" />
+              <div className="w-full max-w-md lg:max-w-lg">
+                <div className="bg-gray-50 border border-gray-100 rounded-3xl p-11 shadow-sm">
+                  <div className="flex items-center gap-5 mb-8 pb-8 border-b border-gray-100">
+                    <div className="w-24 h-24 bg-sky-100 border-2 border-sky-200 rounded-2xl flex items-center justify-center flex-shrink-0">
+                      <Stethoscope className="w-12 h-12 text-sky-600" />
                     </div>
                     <div>
-                      <div className="text-lg font-bold text-gray-900">Dr. Saria El Hachem</div>
-                      <div className="text-sm text-sky-600 font-medium mt-0.5">Family Medicine</div>
-                      <div className="text-xs text-gray-400 mt-1">Jumeirah American Clinic · Dubai</div>
+                      <div className="text-xl font-bold text-gray-900">Dr. Saria El Hachem</div>
+                      <div className="text-base text-sky-600 font-medium mt-1">Family Medicine</div>
+                      <div className="text-sm text-gray-400 mt-1">Jumeirah American Clinic · Dubai</div>
                     </div>
                   </div>
-                  <div className="space-y-2.5">
+                  <div className="space-y-3">
                     {[
                       { icon: FileText,     label: 'Medical Records',   color: 'text-sky-600',     bg: 'bg-sky-50' },
                       { icon: FlaskConical, label: 'Lab & Blood Tests',  color: 'text-emerald-600', bg: 'bg-emerald-50' },
                       { icon: Shield,       label: 'Radiology & X-Rays', color: 'text-purple-600',  bg: 'bg-purple-50' },
                     ].map(({ icon: Icon, label, color, bg }) => (
-                      <div key={label} className="flex items-center gap-3 bg-white border border-gray-100 rounded-xl px-4 py-3">
-                        <div className={`w-9 h-9 ${bg} rounded-lg flex items-center justify-center flex-shrink-0`}>
-                          <Icon className={`w-4 h-4 ${color}`} />
+                      <div key={label} className="flex items-center gap-4 bg-white border border-gray-100 rounded-xl px-5 py-4">
+                        <div className={`w-11 h-11 ${bg} rounded-lg flex items-center justify-center flex-shrink-0`}>
+                          <Icon className={`w-5 h-5 ${color}`} />
                         </div>
-                        <span className="text-sm font-medium text-gray-700 flex-1">{label}</span>
-                        <Lock className="w-3.5 h-3.5 text-gray-300" />
+                        <span className="text-base font-medium text-gray-700 flex-1">{label}</span>
+                        <Lock className="w-4 h-4 text-gray-300" />
                       </div>
                     ))}
                   </div>
-                  <div className="mt-5 pt-5 border-t border-gray-100 flex items-center justify-between">
-                    <span className="text-xs text-gray-400">Secure · Private · Encrypted</span>
-                    <div className="flex items-center gap-1.5">
-                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                      <span className="text-xs text-emerald-600 font-medium">Online</span>
+                  <div className="mt-7 pt-7 border-t border-gray-100 flex items-center justify-between">
+                    <span className="text-sm text-gray-400">Secure · Private · Encrypted</span>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                      <span className="text-sm text-emerald-600 font-medium">Online</span>
                     </div>
                   </div>
                 </div>
