@@ -61,6 +61,15 @@ export function requireRole(...roles: string[]) {
   };
 }
 
+/** Returns true if targetPatientId shares the same email as the requester (i.e. is a family member). */
+export async function isFamilyMember(requesterEmail: string, targetPatientId: string): Promise<boolean> {
+  const result = await pool.query(
+    'SELECT id FROM users WHERE id = $1 AND email = $2 AND is_active = 1',
+    [targetPatientId, requesterEmail]
+  );
+  return result.rows.length > 0;
+}
+
 export function canAccessPatientData(req: AuthRequest, res: Response, next: NextFunction): void {
   if (!req.user) {
     res.status(401).json({ error: 'Authentication required' });

@@ -2,7 +2,7 @@ import { Router, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
 import pool from '../db/database';
-import { authenticate, requireRole, AuthRequest, auditLog } from '../middleware/auth';
+import { authenticate, requireRole, AuthRequest, auditLog, isFamilyMember } from '../middleware/auth';
 import { sendDeactivationNotification, sendReactivationNotification } from '../services/email';
 
 const router = Router();
@@ -54,12 +54,14 @@ router.get('/staff/list', requireRole('doctor'), async (_req: AuthRequest, res: 
   }
 });
 
-// GET /api/patients/:id - Doctor/Nurse or self
+// GET /api/patients/:id - Doctor/Nurse or self or family member
 router.get('/:id', auditLog('view_patient'), async (req: AuthRequest, res: Response): Promise<void> => {
   const { id } = req.params;
   if (req.user!.role === 'patient' && req.user!.id !== id) {
-    res.status(403).json({ error: 'Access denied' });
-    return;
+    if (!await isFamilyMember(req.user!.email, id)) {
+      res.status(403).json({ error: 'Access denied' });
+      return;
+    }
   }
   try {
     const result = await pool.query(`

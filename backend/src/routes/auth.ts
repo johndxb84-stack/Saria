@@ -105,6 +105,16 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
       last_name: user.last_name
     });
 
+    // For patients: fetch all accounts sharing this email so the family portal can show them
+    let familyMembers: { id: string; first_name: string; last_name: string; date_of_birth: string | null; gender: string | null }[] = [];
+    if (user.role === 'patient') {
+      const familyResult = await pool.query(
+        "SELECT id, first_name, last_name, date_of_birth, gender FROM users WHERE email = $1 AND role = 'patient' AND is_active = 1 ORDER BY created_at ASC",
+        [user.email]
+      );
+      familyMembers = familyResult.rows;
+    }
+
     res.json({
       token,
       user: {
@@ -113,7 +123,8 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
         role: user.role,
         first_name: user.first_name,
         last_name: user.last_name
-      }
+      },
+      familyMembers
     });
   } catch (err) {
     console.error(err);

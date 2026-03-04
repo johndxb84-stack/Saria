@@ -1,7 +1,7 @@
 import { Router, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import pool from '../db/database';
-import { authenticate, requireRole, AuthRequest, auditLog } from '../middleware/auth';
+import { authenticate, requireRole, AuthRequest, auditLog, isFamilyMember } from '../middleware/auth';
 import { sendNewRecordNotification } from '../services/email';
 
 const router = Router();
@@ -11,8 +11,10 @@ router.use(authenticate);
 router.get('/:patientId', auditLog('view_records'), async (req: AuthRequest, res: Response): Promise<void> => {
   const { patientId } = req.params;
   if (req.user!.role === 'patient' && req.user!.id !== patientId) {
-    res.status(403).json({ error: 'Access denied' });
-    return;
+    if (!await isFamilyMember(req.user!.email, patientId)) {
+      res.status(403).json({ error: 'Access denied' });
+      return;
+    }
   }
   try {
     const recordsResult = await pool.query(`
@@ -43,8 +45,10 @@ router.get('/:patientId', auditLog('view_records'), async (req: AuthRequest, res
 router.get('/:patientId/summary', async (req: AuthRequest, res: Response): Promise<void> => {
   const { patientId } = req.params;
   if (req.user!.role === 'patient' && req.user!.id !== patientId) {
-    res.status(403).json({ error: 'Access denied' });
-    return;
+    if (!await isFamilyMember(req.user!.email, patientId)) {
+      res.status(403).json({ error: 'Access denied' });
+      return;
+    }
   }
   try {
     const [totalResult, byTypeResult, filesResult, lastResult] = await Promise.all([
@@ -181,8 +185,10 @@ router.delete('/:id', requireRole('doctor'), async (req: AuthRequest, res: Respo
 router.get('/blood/:patientId', auditLog('view_blood_results'), async (req: AuthRequest, res: Response): Promise<void> => {
   const { patientId } = req.params;
   if (req.user!.role === 'patient' && req.user!.id !== patientId) {
-    res.status(403).json({ error: 'Access denied' });
-    return;
+    if (!await isFamilyMember(req.user!.email, patientId)) {
+      res.status(403).json({ error: 'Access denied' });
+      return;
+    }
   }
   try {
     const result = await pool.query(`

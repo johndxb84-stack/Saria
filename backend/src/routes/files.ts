@@ -4,7 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
 import pool from '../db/database';
-import { authenticate, requireRole, AuthRequest, auditLog } from '../middleware/auth';
+import { authenticate, requireRole, AuthRequest, auditLog, isFamilyMember } from '../middleware/auth';
 
 const router = Router();
 router.use(authenticate);
@@ -117,8 +117,10 @@ router.get('/download/:fileId', auditLog('download_file'), async (req: AuthReque
     const file = result.rows[0] as { file_name: string; original_name: string; mime_type: string; patient_id: string; file_data: Buffer | null };
 
     if (req.user!.role === 'patient' && req.user!.id !== file.patient_id) {
-      res.status(403).json({ error: 'Access denied' });
-      return;
+      if (!await isFamilyMember(req.user!.email, file.patient_id)) {
+        res.status(403).json({ error: 'Access denied' });
+        return;
+      }
     }
 
     // Serve from DB (primary — works on ephemeral filesystems like Railway)
@@ -146,8 +148,10 @@ router.get('/download/:fileId', auditLog('download_file'), async (req: AuthReque
 router.get('/:patientId', auditLog('view_files'), async (req: AuthRequest, res: Response): Promise<void> => {
   const { patientId } = req.params;
   if (req.user!.role === 'patient' && req.user!.id !== patientId) {
-    res.status(403).json({ error: 'Access denied' });
-    return;
+    if (!await isFamilyMember(req.user!.email, patientId)) {
+      res.status(403).json({ error: 'Access denied' });
+      return;
+    }
   }
   try {
     const result = await pool.query(`

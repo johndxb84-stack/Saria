@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../utils/api';
-import { RecordSummary, MedicalRecord } from '../types';
+import { RecordSummary, MedicalRecord, FamilyMember } from '../types';
 import {
   FileText, FlaskConical, Image, Pill, Calendar,
-  ChevronRight, Activity, Heart, Shield, User
+  ChevronRight, Activity, Heart, Shield, User, Users
 } from 'lucide-react';
 
 const RECORD_ICONS: Record<string, React.ReactNode> = {
@@ -33,22 +33,36 @@ const RECORD_COLORS: Record<string, string> = {
   other: 'bg-gray-100 text-gray-500',
 };
 
+function getInitials(member: FamilyMember) {
+  return `${member.first_name[0]}${member.last_name[0]}`.toUpperCase();
+}
+
+const AVATAR_COLORS = [
+  'bg-sky-500', 'bg-violet-500', 'bg-emerald-500', 'bg-amber-500',
+  'bg-pink-500', 'bg-orange-500', 'bg-teal-500', 'bg-indigo-500',
+];
+
 export default function PatientDashboard() {
-  const { user } = useAuth();
+  const { user, familyMembers, viewedPatientId, viewedMember, switchProfile } = useAuth();
   const [summary, setSummary] = useState<RecordSummary | null>(null);
   const [recentRecords, setRecentRecords] = useState<MedicalRecord[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const targetId = viewedPatientId || user?.id;
+  const isViewingFamily = viewedPatientId !== user?.id;
+  const displayName = viewedMember?.first_name ?? user?.first_name ?? '';
+
   useEffect(() => {
-    if (!user) return;
+    if (!targetId) return;
+    setLoading(true);
     Promise.all([
-      api.get<RecordSummary>(`/records/${user.id}/summary`),
-      api.get<MedicalRecord[]>(`/records/${user.id}`)
+      api.get<RecordSummary>(`/records/${targetId}/summary`),
+      api.get<MedicalRecord[]>(`/records/${targetId}`)
     ]).then(([sumRes, recRes]) => {
       setSummary(sumRes.data);
       setRecentRecords(recRes.data.slice(0, 5));
     }).catch(console.error).finally(() => setLoading(false));
-  }, [user]);
+  }, [targetId]);
 
   if (loading) {
     return (
@@ -65,12 +79,63 @@ export default function PatientDashboard() {
     <div className="min-h-screen text-gray-900">
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        {/* Family Profile Switcher — only shown when there are multiple members */}
+        {familyMembers.length > 1 && (
+          <div className="mb-8">
+            <div className="flex items-center gap-2 mb-3">
+              <Users className="w-4 h-4 text-gray-500" />
+              <span className="text-sm font-medium text-gray-500">Family Profiles</span>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              {familyMembers.map((member, idx) => {
+                const isActive = member.id === viewedPatientId;
+                const avatarColor = AVATAR_COLORS[idx % AVATAR_COLORS.length];
+                return (
+                  <button
+                    key={member.id}
+                    onClick={() => switchProfile(member)}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-2xl border-2 transition-all font-medium text-sm ${
+                      isActive
+                        ? 'border-sky-500 bg-sky-50 text-sky-700 shadow-sm'
+                        : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50'
+                    }`}
+                  >
+                    <div className={`w-8 h-8 rounded-full ${avatarColor} flex items-center justify-center text-white text-xs font-bold flex-shrink-0`}>
+                      {getInitials(member)}
+                    </div>
+                    <div className="text-left">
+                      <p className={`font-semibold leading-tight ${isActive ? 'text-sky-700' : 'text-gray-800'}`}>
+                        {member.first_name} {member.last_name}
+                      </p>
+                      {member.date_of_birth && (
+                        <p className="text-xs text-gray-400 leading-tight">
+                          {new Date(member.date_of_birth).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                        </p>
+                      )}
+                    </div>
+                    {isActive && (
+                      <span className="ml-1 w-2 h-2 rounded-full bg-sky-500 flex-shrink-0" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* Welcome */}
         <div className="mb-8">
           <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">
-            Welcome, {user?.first_name} 👋
+            {isViewingFamily
+              ? `${displayName}'s Health Records`
+              : `Welcome, ${displayName} 👋`}
           </h1>
-          <p className="text-gray-500 mt-1">Your health records are secure and up to date</p>
+          <p className="text-gray-500 mt-1">
+            {isViewingFamily
+              ? `Viewing records for ${viewedMember?.first_name} ${viewedMember?.last_name}`
+              : 'Your health records are secure and up to date'}
+          </p>
         </div>
 
         {/* Stats */}
@@ -100,7 +165,10 @@ export default function PatientDashboard() {
           <div className="lg:col-span-2 card">
             <div className="flex items-center justify-between mb-5">
               <h2 className="font-bold text-gray-900">Recent Records</h2>
-              <Link to="/patient/records" className="text-sm text-sky-600 hover:text-sky-800 flex items-center gap-1 font-medium">
+              <Link
+                to={isViewingFamily ? `/patient/records/${targetId}` : '/patient/records'}
+                className="text-sm text-sky-600 hover:text-sky-800 flex items-center gap-1 font-medium"
+              >
                 View all <ChevronRight className="w-4 h-4" />
               </Link>
             </div>
@@ -138,10 +206,10 @@ export default function PatientDashboard() {
               <h2 className="font-bold text-gray-900 mb-4">Quick Access</h2>
               <div className="space-y-2">
                 {[
-                  { to: '/patient/records', icon: FileText, label: 'All Medical Records', color: 'text-sky-600' },
-                  { to: '/patient/records', icon: FlaskConical, label: 'Blood Test Results', color: 'text-red-500' },
-                  { to: '/patient/records', icon: Image, label: 'X-Rays & Scans', color: 'text-purple-600' },
-                  { to: '/patient/records', icon: Pill, label: 'Prescriptions', color: 'text-emerald-600' },
+                  { to: isViewingFamily ? `/patient/records/${targetId}` : '/patient/records', icon: FileText, label: 'All Medical Records', color: 'text-sky-600' },
+                  { to: isViewingFamily ? `/patient/records/${targetId}` : '/patient/records', icon: FlaskConical, label: 'Blood Test Results', color: 'text-red-500' },
+                  { to: isViewingFamily ? `/patient/records/${targetId}` : '/patient/records', icon: Image, label: 'X-Rays & Scans', color: 'text-purple-600' },
+                  { to: isViewingFamily ? `/patient/records/${targetId}` : '/patient/records', icon: Pill, label: 'Prescriptions', color: 'text-emerald-600' },
                   { to: '/patient/profile', icon: User, label: 'My Profile', color: 'text-gray-600' },
                 ].map(({ to, icon: Icon, label, color }) => (
                   <Link key={label} to={to} className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-gray-50 transition-colors group">

@@ -1,5 +1,13 @@
 export type UserRole = 'doctor' | 'nurse' | 'patient';
 
+export interface FamilyMember {
+  id: string;
+  first_name: string;
+  last_name: string;
+  date_of_birth?: string | null;
+  gender?: string | null;
+}
+
 export interface User {
   id: string;
   email: string;

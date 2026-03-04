@@ -7,8 +7,14 @@ import { MedicalRecord, FileRecord, RecordType, User } from '../types';
 import {
   FileText, FlaskConical, Image, Pill, Shield, Heart,
   Download, Plus, ArrowLeft, Search, Filter, ChevronDown, ChevronUp,
-  Calendar, User as UserIcon, Paperclip, Droplet, AlertCircle
+  Calendar, User as UserIcon, Paperclip, Droplet, AlertCircle, Users
 } from 'lucide-react';
+import { FamilyMember } from '../types';
+
+const AVATAR_COLORS = [
+  'bg-sky-500', 'bg-violet-500', 'bg-emerald-500', 'bg-amber-500',
+  'bg-pink-500', 'bg-orange-500', 'bg-teal-500', 'bg-indigo-500',
+];
 
 const TYPE_CONFIG: Record<string, { label: string; color: string; icon: React.ReactNode }> = {
   consultation: { label: 'Consultation', color: 'badge-blue', iconClass: 'bg-sky-50 text-sky-600', icon: <FileText className="w-4 h-4" /> },
@@ -30,10 +36,11 @@ const STATUS_COLORS = {
 };
 
 export default function PatientRecordsPage() {
-  const { user } = useAuth();
+  const { user, viewedPatientId, viewedMember, familyMembers, switchProfile } = useAuth();
   const { patientId } = useParams();
   const navigate = useNavigate();
-  const effectivePatientId = patientId || user?.id;
+  // Staff pass patientId via URL; patients use the currently viewed family profile
+  const effectivePatientId = patientId || viewedPatientId || user?.id;
 
   const [records, setRecords] = useState<MedicalRecord[]>([]);
   const [files, setFiles] = useState<FileRecord[]>([]);
@@ -113,14 +120,51 @@ export default function PatientRecordsPage() {
     );
   }
 
+  const isViewingFamily = !isStaff && viewedPatientId !== user?.id;
   const patientName = isStaff && patient
     ? `${patient.first_name} ${patient.last_name}`
-    : `${user?.first_name} ${user?.last_name}`;
+    : isViewingFamily && viewedMember
+      ? `${viewedMember.first_name} ${viewedMember.last_name}`
+      : `${user?.first_name} ${user?.last_name}`;
 
   return (
     <div className="min-h-screen text-gray-900">
       <Navbar />
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        {/* Family profile switcher for patients */}
+        {!isStaff && familyMembers.length > 1 && (
+          <div className="mb-6">
+            <div className="flex items-center gap-2 mb-3">
+              <Users className="w-4 h-4 text-gray-500" />
+              <span className="text-sm font-medium text-gray-500">Family Profiles</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {familyMembers.map((member: FamilyMember, idx: number) => {
+                const isActive = member.id === viewedPatientId;
+                const avatarColor = AVATAR_COLORS[idx % AVATAR_COLORS.length];
+                return (
+                  <button
+                    key={member.id}
+                    onClick={() => switchProfile(member)}
+                    className={`flex items-center gap-2 px-3 py-2 rounded-xl border-2 transition-all text-sm ${
+                      isActive
+                        ? 'border-sky-500 bg-sky-50 text-sky-700'
+                        : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                    }`}
+                  >
+                    <div className={`w-6 h-6 rounded-full ${avatarColor} flex items-center justify-center text-white text-xs font-bold`}>
+                      {`${member.first_name[0]}${member.last_name[0]}`.toUpperCase()}
+                    </div>
+                    <span className="font-medium">{member.first_name} {member.last_name}</span>
+                    {isActive && <span className="w-2 h-2 rounded-full bg-sky-500" />}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
@@ -129,7 +173,7 @@ export default function PatientRecordsPage() {
             </button>
             <div>
               <h1 className="text-xl font-bold text-gray-900">
-                {isStaff ? `${patientName}'s Records` : 'My Medical Records'}
+                {isStaff ? `${patientName}'s Records` : isViewingFamily ? `${patientName}'s Records` : 'My Medical Records'}
               </h1>
               {isStaff && patient && (
                 <p className="text-sm text-gray-500">{patient.email} · {patient.date_of_birth}</p>
