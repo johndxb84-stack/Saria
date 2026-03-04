@@ -63,7 +63,7 @@ export default function HomePage() {
                 <div className="h-8 w-px bg-gray-200" />
                 <div className="inline-flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold px-3 py-1.5 rounded-full">
                   <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
-                  UAE Licensed
+                  DHA Licensed
                 </div>
               </div>
             </div>
@@ -158,37 +158,18 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Right – record preview rows */}
-              <div className="space-y-3">
-                {[
-                  { title: 'Lab Results',        subtitle: 'Blood Test · CBC · Lipid Panel',  icon: FlaskConical, color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-100' },
-                  { title: 'Radiology Reports',  subtitle: 'X-Ray · MRI · CT Scan',           icon: Shield,       color: 'text-purple-600',  bg: 'bg-purple-50',  border: 'border-purple-100' },
-                  { title: 'Prescriptions',      subtitle: 'Medications · Dosage · Refills',  icon: FileText,     color: 'text-sky-600',     bg: 'bg-sky-50',     border: 'border-sky-100' },
-                ].map(item => (
-                  <div key={item.title} className={`bg-white border ${item.border} rounded-2xl p-4 flex items-center gap-4`}>
-                    <div className={`w-11 h-11 ${item.bg} rounded-xl flex items-center justify-center flex-shrink-0`}>
-                      <item.icon className={`w-5 h-5 ${item.color}`} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-semibold text-gray-900">{item.title}</div>
-                      <div className="text-xs text-gray-400 mt-0.5">{item.subtitle}</div>
-                    </div>
-                    <Lock className="w-3.5 h-3.5 text-gray-300 flex-shrink-0" />
-                  </div>
-                ))}
-
-                <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 flex items-center gap-3">
-                  <div className="w-10 h-10 bg-sky-50 border border-sky-200 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Lock className="w-4 h-4 text-sky-600" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="text-sm font-semibold text-gray-900">End-to-End Encrypted</div>
-                    <div className="text-xs text-gray-400 mt-0.5">256-bit AES · Your data stays private</div>
-                  </div>
-                  <div className="flex items-center gap-1.5 flex-shrink-0">
-                    <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                    <span className="text-xs text-emerald-600 font-medium">Secure</span>
-                  </div>
+              {/* Right – privacy card */}
+              <div className="bg-gray-50 border border-gray-100 rounded-2xl p-8 flex flex-col items-center justify-center text-center h-full min-h-[260px]">
+                <div className="w-16 h-16 bg-sky-50 border border-sky-200 rounded-2xl flex items-center justify-center mb-5">
+                  <Lock className="w-8 h-8 text-sky-600" />
+                </div>
+                <div className="text-lg font-bold text-gray-900 mb-2">End-to-End Encrypted</div>
+                <div className="text-sm text-gray-500 leading-relaxed mb-5 max-w-xs">
+                  Your medical data is protected with 256-bit AES encryption. Only you and Dr. El Hachem's authorized team can access it.
+                </div>
+                <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-200 rounded-full px-4 py-1.5">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                  <span className="text-xs text-emerald-700 font-semibold">Secure & Private</span>
                 </div>
               </div>
 
