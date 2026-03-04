@@ -24,8 +24,8 @@ router.get('/', requireRole('doctor', 'nurse'), auditLog('list_patients'), async
   }
 });
 
-// GET /api/patients/pending - Doctor only: pending approvals
-router.get('/pending', requireRole('doctor'), async (_req: AuthRequest, res: Response): Promise<void> => {
+// GET /api/patients/pending - Doctor/Nurse: pending approvals
+router.get('/pending', requireRole('doctor', 'nurse'), async (_req: AuthRequest, res: Response): Promise<void> => {
   try {
     const result = await pool.query(`
       SELECT id, email, first_name, last_name, phone, date_of_birth, gender, created_at
@@ -93,8 +93,8 @@ router.get('/:id', auditLog('view_patient'), async (req: AuthRequest, res: Respo
   }
 });
 
-// PUT /api/patients/:id/approve - Doctor only
-router.put('/:id/approve', requireRole('doctor'), async (req: AuthRequest, res: Response): Promise<void> => {
+// PUT /api/patients/:id/approve - Doctor/Nurse
+router.put('/:id/approve', requireRole('doctor', 'nurse'), async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const patientResult = await pool.query(
       "SELECT id, email, first_name, last_name FROM users WHERE id = $1 AND role = 'patient'",
@@ -114,8 +114,8 @@ router.put('/:id/approve', requireRole('doctor'), async (req: AuthRequest, res: 
   }
 });
 
-// PUT /api/patients/:id/reject - Doctor only
-router.put('/:id/reject', requireRole('doctor'), async (req: AuthRequest, res: Response): Promise<void> => {
+// PUT /api/patients/:id/reject - Doctor/Nurse
+router.put('/:id/reject', requireRole('doctor', 'nurse'), async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const patientResult = await pool.query(
       "SELECT email, first_name, last_name FROM users WHERE id = $1 AND role = 'patient' AND approved = 0",
@@ -135,8 +135,8 @@ router.put('/:id/reject', requireRole('doctor'), async (req: AuthRequest, res: R
   }
 });
 
-// PUT /api/patients/:id/deactivate - Doctor only
-router.put('/:id/deactivate', requireRole('doctor'), async (req: AuthRequest, res: Response): Promise<void> => {
+// PUT /api/patients/:id/deactivate - Doctor/Nurse
+router.put('/:id/deactivate', requireRole('doctor', 'nurse'), async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const patientResult = await pool.query(
       "SELECT email, first_name, last_name FROM users WHERE id = $1 AND role = 'patient'",
@@ -153,8 +153,8 @@ router.put('/:id/deactivate', requireRole('doctor'), async (req: AuthRequest, re
   }
 });
 
-// PUT /api/patients/:id/reactivate - Doctor only
-router.put('/:id/reactivate', requireRole('doctor'), async (req: AuthRequest, res: Response): Promise<void> => {
+// PUT /api/patients/:id/reactivate - Doctor/Nurse
+router.put('/:id/reactivate', requireRole('doctor', 'nurse'), async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const patientResult = await pool.query(
       "SELECT email, first_name, last_name FROM users WHERE id = $1 AND role = 'patient'",
