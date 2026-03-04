@@ -4,7 +4,7 @@ import Navbar from '../components/Navbar';
 import {
   Heart, MapPin, Mail, Shield,
   Stethoscope, FlaskConical, FileText, Lock,
-  ChevronRight, Star, ExternalLink, Instagram
+  ChevronRight, Star, ExternalLink, Instagram, Phone
 } from 'lucide-react';
 
 export default function HomePage() {
@@ -199,16 +199,27 @@ export default function HomePage() {
               </a>
             </div>
 
-            {/* Email */}
+            {/* Contact Information */}
             <div className="bg-white border border-gray-100 rounded-2xl p-7 text-center shadow-sm hover:shadow-md transition-shadow">
               <div className="w-12 h-12 bg-sky-50 border border-sky-200 rounded-2xl flex items-center justify-center mx-auto mb-5">
                 <Mail className="w-6 h-6 text-sky-600" />
               </div>
-              <h3 className="font-bold mb-2 text-base text-gray-900">Email</h3>
-              <a href="mailto:saria.hachem@jac.ae" className="text-sky-600 text-sm font-medium hover:text-sky-800 transition-colors">
-                saria.hachem@jac.ae
-              </a>
-              <p className="text-gray-400 text-xs mt-1">For appointments & records</p>
+              <h3 className="font-bold mb-4 text-base text-gray-900">Contact Information</h3>
+              <div className="space-y-3">
+                <div>
+                  <p className="text-xs text-gray-400 mb-0.5 uppercase tracking-wide font-medium">Email</p>
+                  <a href="mailto:saria.hachem@jac.ae" className="text-sky-600 text-sm font-medium hover:text-sky-800 transition-colors">
+                    saria.hachem@jac.ae
+                  </a>
+                </div>
+                <div className="border-t border-gray-100 pt-3">
+                  <p className="text-xs text-gray-400 mb-0.5 uppercase tracking-wide font-medium">Jumeirah American Clinic</p>
+                  <a href="tel:800522823" className="inline-flex items-center gap-1.5 text-sky-600 text-sm font-medium hover:text-sky-800 transition-colors">
+                    <Phone className="w-3.5 h-3.5" />
+                    800-522823
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
 
