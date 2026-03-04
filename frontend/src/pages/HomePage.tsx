@@ -133,13 +133,12 @@ export default function HomePage() {
                   { title: 'Lab Results',  type: 'Blood Test',         icon: FlaskConical, color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-200' },
                   { title: 'Radiology',    type: 'X-Ray · MRI · Scan', icon: Shield,       color: 'text-purple-600',  bg: 'bg-purple-50',  border: 'border-purple-200' },
                 ].map(item => (
-                  <div key={item.title} className="bg-gray-50 border border-gray-100 rounded-2xl p-5">
-                    <div className={`w-10 h-10 ${item.bg} border ${item.border} rounded-xl flex items-center justify-center mb-4`}>
-                      <item.icon className={`w-5 h-5 ${item.color}`} />
+                  <div key={item.title} className="bg-gray-50 border border-gray-100 rounded-2xl p-4">
+                    <div className={`w-9 h-9 ${item.bg} border ${item.border} rounded-xl flex items-center justify-center mb-3`}>
+                      <item.icon className={`w-4 h-4 ${item.color}`} />
                     </div>
                     <div className="text-sm font-semibold text-gray-900">{item.title}</div>
                     <div className="text-xs text-gray-500 mt-1 leading-relaxed">{item.type}</div>
-                    <span className="inline-block mt-3 text-xs bg-white border border-gray-200 text-gray-500 rounded-full px-2.5 py-1">Recent</span>
                   </div>
                 ))}
 
