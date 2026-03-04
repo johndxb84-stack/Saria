@@ -3,7 +3,7 @@ import { Resend } from 'resend';
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const FROM = process.env.EMAIL_FROM || 'Dr. Saria El Hachem Clinic <no-reply@drsariaelhachem.com>';
-const DOCTOR_EMAIL = process.env.DOCTOR_EMAIL || 'dr.saria@clinic.ae';
+const DOCTOR_EMAIL = process.env.DOCTOR_EMAIL || 'saria.hachem@jac.ae';
 const PORTAL_URL = process.env.FRONTEND_URL || 'https://drsariaelhachem.com';
 
 // ─── Shared layout ────────────────────────────────────────────────────────────

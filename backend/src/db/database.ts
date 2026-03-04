@@ -130,16 +130,16 @@ export async function initializeSchema(): Promise<void> {
 }
 
 async function seedDoctor(): Promise<void> {
-  const result = await pool.query('SELECT id FROM users WHERE email = $1', ['dr.saria@clinic.ae']);
+  const result = await pool.query('SELECT id FROM users WHERE email = $1', ['saria.hachem@jac.ae']);
   if (result.rows.length === 0) {
     const hash = await bcrypt.hash('DrSaria2024!', 12);
     const id = uuidv4();
     await pool.query(
       `INSERT INTO users (id, email, password_hash, role, first_name, last_name, phone, is_active, approved)
        VALUES ($1, $2, $3, 'doctor', 'Saria', 'El Hachem', '+971-XX-XXX-XXXX', 1, 1)`,
-      [id, 'dr.saria@clinic.ae', hash]
+      [id, 'saria.hachem@jac.ae', hash]
     );
-    console.log('✅ Doctor account seeded: dr.saria@clinic.ae / DrSaria2024!');
+    console.log('✅ Doctor account seeded: saria.hachem@jac.ae / DrSaria2024!');
   }
 }
 
