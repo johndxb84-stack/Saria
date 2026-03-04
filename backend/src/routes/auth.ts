@@ -39,12 +39,6 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
   }
 
   try {
-    const existing = await pool.query('SELECT id FROM users WHERE email = $1', [email.toLowerCase().trim()]);
-    if (existing.rows.length > 0) {
-      res.status(409).json({ error: 'An account with this email already exists' });
-      return;
-    }
-
     const hash = await bcrypt.hash(password, 12);
     const id = uuidv4();
     await pool.query(
@@ -80,7 +74,7 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
 
   try {
     const result = await pool.query(
-      'SELECT id, email, password_hash, role, first_name, last_name, is_active, approved FROM users WHERE email = $1',
+      'SELECT id, email, password_hash, role, first_name, last_name, is_active, approved FROM users WHERE email = $1 AND is_active = 1',
       [email.toLowerCase().trim()]
     );
 
@@ -89,18 +83,16 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const user = result.rows[0] as {
-      id: string; email: string; password_hash: string; role: string;
-      first_name: string; last_name: string; is_active: number; approved: number;
-    };
-
-    if (!user.is_active) {
-      res.status(403).json({ error: 'Your account has been deactivated. Please contact the clinic.' });
-      return;
+    type UserRow = { id: string; email: string; password_hash: string; role: string; first_name: string; last_name: string; is_active: number; approved: number; };
+    let user: UserRow | null = null;
+    for (const row of result.rows as UserRow[]) {
+      if (await bcrypt.compare(password, row.password_hash)) {
+        user = row;
+        break;
+      }
     }
 
-    const valid = await bcrypt.compare(password, user.password_hash);
-    if (!valid) {
+    if (!user) {
       res.status(401).json({ error: 'Invalid email or password' });
       return;
     }

@@ -11,7 +11,7 @@ export async function initializeSchema(): Promise<void> {
   await pool.query(`
     CREATE TABLE IF NOT EXISTS users (
       id TEXT PRIMARY KEY,
-      email TEXT UNIQUE NOT NULL,
+      email TEXT NOT NULL,
       password_hash TEXT NOT NULL,
       role TEXT NOT NULL CHECK(role IN ('doctor', 'nurse', 'patient')),
       first_name TEXT NOT NULL,
@@ -32,6 +32,8 @@ export async function initializeSchema(): Promise<void> {
   // Add ID columns if they don't exist (for existing databases)
   await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS id_type TEXT`);
   await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS id_number TEXT`);
+  // Drop unique constraint on email to allow family members to share an email address
+  await pool.query(`ALTER TABLE users DROP CONSTRAINT IF EXISTS users_email_key`).catch(() => {});
   await pool.query(`ALTER TABLE medical_records ADD COLUMN IF NOT EXISTS is_confidential INTEGER NOT NULL DEFAULT 0`).catch(() => {});
   await pool.query(`ALTER TABLE medical_records ALTER COLUMN is_confidential SET DEFAULT 0`).catch(() => {});
 
