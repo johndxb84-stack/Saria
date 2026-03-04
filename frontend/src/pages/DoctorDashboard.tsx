@@ -5,9 +5,9 @@ import { useAuth } from '../contexts/AuthContext';
 import api from '../utils/api';
 import { User } from '../types';
 import {
-  Users, UserCheck, Clock, Search, CheckCircle, XCircle,
+  Users, UserCheck, Search, CheckCircle, XCircle,
   FileText, Plus, Shield, Activity, Bell, UserX, RefreshCw,
-  ChevronDown, AlertTriangle, Mail, KeyRound
+  ChevronDown, AlertTriangle, KeyRound
 } from 'lucide-react';
 
 // ─── Toast ────────────────────────────────────────────────────────────────────
@@ -74,12 +74,11 @@ function ConfirmDialog({ message, onConfirm, onCancel, confirmLabel = 'Confirm',
 export default function DoctorDashboard() {
   const { user } = useAuth();
   const [patients, setPatients] = useState<User[]>([]);
-  const [pending, setPending] = useState<User[]>([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [actionId, setActionId] = useState<string | null>(null);
   const [toasts, setToasts] = useState<Toast[]>([]);
-  const [confirm, setConfirm] = useState<{ id: string; action: 'reject' | 'deactivate' } | null>(null);
+  const [confirm, setConfirm] = useState<{ id: string; action: 'deactivate' } | null>(null);
   const [showInactive, setShowInactive] = useState(false);
   const [resetPwd, setResetPwd] = useState<{ id: string; name: string } | null>(null);
   const [newPassword, setNewPassword] = useState('');
@@ -96,12 +95,8 @@ export default function DoctorDashboard() {
 
   const load = useCallback(async () => {
     try {
-      const [pRes, pendRes] = await Promise.all([
-        api.get<User[]>('/patients'),
-        api.get<User[]>('/patients/pending')
-      ]);
+      const pRes = await api.get<User[]>('/patients');
       setPatients(pRes.data);
-      setPending(pendRes.data);
     } catch {
       toast('Failed to load patients', 'error');
     } finally {
@@ -110,33 +105,6 @@ export default function DoctorDashboard() {
   }, [toast]);
 
   useEffect(() => { load(); }, [load]);
-
-  const approve = async (id: string, name: string) => {
-    setActionId(id);
-    try {
-      await api.put(`/patients/${id}/approve`);
-      toast(`${name} approved — confirmation email sent`);
-      await load();
-    } catch {
-      toast('Failed to approve patient', 'error');
-    } finally {
-      setActionId(null);
-    }
-  };
-
-  const reject = async (id: string, name: string) => {
-    setActionId(id);
-    setConfirm(null);
-    try {
-      await api.put(`/patients/${id}/reject`);
-      toast(`${name}'s registration was rejected`, 'info');
-      await load();
-    } catch {
-      toast('Failed to reject registration', 'error');
-    } finally {
-      setActionId(null);
-    }
-  };
 
   const deactivate = async (id: string, name: string) => {
     setActionId(id);
@@ -188,7 +156,7 @@ export default function DoctorDashboard() {
       p.phone?.includes(q);
   });
 
-  const active = filtered.filter(p => p.is_active && p.approved);
+  const active = filtered.filter(p => p.is_active);
   const inactive = filtered.filter(p => !p.is_active);
 
   if (loading) {
@@ -210,17 +178,12 @@ export default function DoctorDashboard() {
       {confirm && (
         <ConfirmDialog
           danger
-          message={
-            confirm.action === 'reject'
-              ? `Reject this patient's registration? They will be notified by email.`
-              : `Deactivate this patient's account? They will lose portal access and be notified.`
-          }
-          confirmLabel={confirm.action === 'reject' ? 'Reject' : 'Deactivate'}
+          message={`Deactivate this patient's account? They will lose portal access and be notified.`}
+          confirmLabel="Deactivate"
           onConfirm={() => {
-            const p = [...pending, ...patients].find(x => x.id === confirm.id);
+            const p = patients.find(x => x.id === confirm.id);
             const name = p ? `${p.first_name} ${p.last_name}` : 'Patient';
-            if (confirm.action === 'reject') reject(confirm.id, name);
-            else deactivate(confirm.id, name);
+            deactivate(confirm.id, name);
           }}
           onCancel={() => setConfirm(null)}
         />
@@ -277,13 +240,12 @@ export default function DoctorDashboard() {
         </div>
 
         {/* Stats */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+        <div className="grid sm:grid-cols-3 gap-5 mb-8">
           {[
-            { label: 'Total Patients', value: patients.filter(p => p.approved).length, icon: Users, color: 'text-sky-600', bg: 'bg-sky-400/20' },
+            { label: 'Total Patients', value: patients.length, icon: Users, color: 'text-sky-600', bg: 'bg-sky-400/20' },
             { label: 'Active Patients', value: active.length, icon: UserCheck, color: 'text-emerald-600', bg: 'bg-green-400/20' },
-            { label: 'Pending Approval', value: pending.length, icon: Clock, color: 'text-yellow-300', bg: 'bg-yellow-400/20', pulse: pending.length > 0 },
             { label: 'Inactive', value: inactive.length, icon: XCircle, color: 'text-gray-500', bg: 'bg-gray-100' },
-          ].map(({ label, value, icon: Icon, color, bg, pulse }) => (
+          ].map(({ label, value, icon: Icon, color, bg }) => (
             <div key={label} className="card">
               <div className="flex items-start justify-between">
                 <div>
@@ -292,73 +254,11 @@ export default function DoctorDashboard() {
                 </div>
                 <div className={`relative w-10 h-10 ${bg} rounded-xl flex items-center justify-center`}>
                   <Icon className={`w-5 h-5 ${color}`} />
-                  {pulse && <span className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full animate-ping" />}
                 </div>
               </div>
             </div>
           ))}
         </div>
-
-        {/* Pending approvals */}
-        {pending.length > 0 && (
-          <div className="card mb-6 border-amber-200" style={{background:"#fffbeb"}}>
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-8 h-8 bg-yellow-400/20 rounded-full flex items-center justify-center">
-                <Bell className="w-4 h-4 text-yellow-300" />
-              </div>
-              <div>
-                <h2 className="font-bold text-gray-900">Pending Approvals ({pending.length})</h2>
-                <p className="text-xs text-amber-600/70 mt-0.5">Approve to grant portal access · Reject to decline the registration</p>
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              {pending.map(p => (
-                <div key={p.id} className="glass-pill rounded-xl p-4">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-yellow-400/20 rounded-full flex items-center justify-center flex-shrink-0">
-                        <span className="text-amber-600 text-sm font-bold">{p.first_name[0]}{p.last_name[0]}</span>
-                      </div>
-                      <div>
-                        <p className="font-semibold text-gray-900 text-sm">{p.first_name} {p.last_name}</p>
-                        <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-0.5">
-                          <span className="text-xs text-gray-500 flex items-center gap-1">
-                            <Mail className="w-3 h-3" />{p.email}
-                          </span>
-                          {p.phone && <span className="text-xs text-gray-400">{p.phone}</span>}
-                          {p.date_of_birth && <span className="text-xs text-gray-400">DOB: {p.date_of_birth}</span>}
-                          <span className="text-xs text-gray-400">
-                            Registered {new Date(p.created_at!).toLocaleDateString('en-AE', { day: 'numeric', month: 'short', year: 'numeric' })}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2 flex-shrink-0">
-                      <button
-                        onClick={() => approve(p.id, `${p.first_name} ${p.last_name}`)}
-                        disabled={actionId === p.id}
-                        className="flex items-center gap-1.5 bg-green-600 text-white text-sm px-4 py-2 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 font-medium"
-                      >
-                        <CheckCircle className="w-4 h-4" />
-                        {actionId === p.id ? 'Working…' : 'Approve'}
-                      </button>
-                      <button
-                        onClick={() => setConfirm({ id: p.id, action: 'reject' })}
-                        disabled={actionId === p.id}
-                        className="flex items-center gap-1.5 border border-red-200 text-red-500 text-sm px-4 py-2 rounded-lg hover:bg-red-400/15 transition-colors disabled:opacity-50 font-medium"
-                      >
-                        <XCircle className="w-4 h-4" />
-                        Reject
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Active patient list */}
         <div className="card">

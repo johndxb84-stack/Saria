@@ -3,7 +3,6 @@ import { Resend } from 'resend';
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const FROM = process.env.EMAIL_FROM || 'Dr. Saria El Hachem Clinic <no-reply@drsariaelhachem.com>';
-const DOCTOR_EMAIL = process.env.DOCTOR_EMAIL || 'saria.hachem@jac.ae';
 const PORTAL_URL = process.env.FRONTEND_URL || 'https://drsariaelhachem.com';
 
 // ─── Shared layout ────────────────────────────────────────────────────────────
@@ -78,102 +77,16 @@ export async function sendRegistrationConfirmation(patient: {
   if (!process.env.RESEND_API_KEY) return;
 
   const html = layout(`
-    <h2 style="margin:0 0 8px;color:#111827;font-size:20px;font-weight:700;">Registration Received!</h2>
-    <p style="margin:0 0 20px;color:#6b7280;font-size:14px;line-height:1.6;">
-      Dear <strong>${patient.first_name}</strong>, thank you for registering with the patient portal.
-      Your request has been received and is currently under review by Dr. El Hachem.
-    </p>
-
-    <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:20px;margin-bottom:24px;">
-      <p style="margin:0 0 6px;color:#1d4ed8;font-size:13px;font-weight:600;">⏳ What happens next?</p>
-      <ul style="margin:0;padding-left:18px;color:#1e40af;font-size:13px;line-height:1.8;">
-        <li>Dr. El Hachem will review your registration</li>
-        <li>You'll receive an email confirmation once approved</li>
-        <li>You can then sign in to view your medical records</li>
-      </ul>
-    </div>
-
-    ${divider()}
-    <p style="margin:0;color:#9ca3af;font-size:12px;text-align:center;">
-      Need urgent access? Please contact the clinic directly.<br/>
-      Registered with: <strong>${patient.email}</strong>
-    </p>
-  `);
-
-  await resend.emails.send({
-    from: FROM,
-    to: patient.email,
-    subject: 'Registration Received — Dr. Saria El Hachem Patient Portal',
-    html,
-  });
-}
-
-// ─── 2. Doctor → New Patient Alert ───────────────────────────────────────────
-
-export async function sendNewPatientAlert(patient: {
-  id: string; first_name: string; last_name: string; email: string;
-  phone?: string | null; date_of_birth?: string | null; gender?: string | null;
-  created_at?: string;
-}): Promise<void> {
-  if (!process.env.RESEND_API_KEY) return;
-
-  const registered = patient.created_at
-    ? new Date(patient.created_at).toLocaleDateString('en-AE', { day: 'numeric', month: 'long', year: 'numeric' })
-    : 'Just now';
-
-  const html = layout(`
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
-      <div style="background:#fef3c7;border-radius:50%;width:44px;height:44px;line-height:44px;text-align:center;font-size:20px;flex-shrink:0;">🔔</div>
-      <div>
-        <h2 style="margin:0;color:#111827;font-size:18px;font-weight:700;">New Patient Registration</h2>
-        <p style="margin:4px 0 0;color:#6b7280;font-size:13px;">Pending your approval in the portal</p>
-      </div>
-    </div>
-
-    <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:20px;margin-bottom:24px;">
-      <table style="width:100%;border-collapse:collapse;">
-        ${infoRow('Full name', `${patient.first_name} ${patient.last_name}`)}
-        ${infoRow('Email', patient.email)}
-        ${patient.phone ? infoRow('Phone', patient.phone) : ''}
-        ${patient.date_of_birth ? infoRow('Date of birth', patient.date_of_birth) : ''}
-        ${patient.gender ? infoRow('Gender', patient.gender.charAt(0).toUpperCase() + patient.gender.slice(1)) : ''}
-        ${infoRow('Registered', registered)}
-      </table>
-    </div>
-
-    ${button('Review & Approve Patient', `${PORTAL_URL}/doctor`, '#2563eb')}
-
-    <p style="margin:0;color:#9ca3af;font-size:12px;text-align:center;">
-      Log in to the portal to approve or reject this registration request.
-    </p>
-  `);
-
-  await resend.emails.send({
-    from: FROM,
-    to: DOCTOR_EMAIL,
-    subject: `New Patient Registration — ${patient.first_name} ${patient.last_name}`,
-    html,
-  });
-}
-
-// ─── 3. Patient → Approval Notification ──────────────────────────────────────
-
-export async function sendApprovalNotification(patient: {
-  first_name: string; last_name: string; email: string;
-}): Promise<void> {
-  if (!process.env.RESEND_API_KEY) return;
-
-  const html = layout(`
     <div style="text-align:center;margin-bottom:28px;">
       <div style="display:inline-block;background:#dcfce7;border-radius:50%;width:60px;height:60px;line-height:60px;font-size:28px;margin-bottom:12px;">✅</div>
-      <h2 style="margin:0 0 8px;color:#111827;font-size:20px;font-weight:700;">You're Approved!</h2>
+      <h2 style="margin:0 0 8px;color:#111827;font-size:20px;font-weight:700;">Registration Successful!</h2>
       <p style="margin:0;color:#6b7280;font-size:14px;">Your patient portal account is now active</p>
     </div>
 
     <p style="margin:0 0 20px;color:#374151;font-size:14px;line-height:1.7;text-align:center;">
       Dear <strong>${patient.first_name}</strong>,<br/>
-      Dr. El Hachem has approved your registration. You can now sign in to the patient portal to view
-      your medical records, test results, prescriptions, and more.
+      Thank you for registering with Dr. Saria El Hachem's patient portal.
+      Your account is now active and you can sign in immediately.
     </p>
 
     ${button('Sign In to Portal', `${PORTAL_URL}/login`, '#16a34a')}
@@ -190,19 +103,19 @@ export async function sendApprovalNotification(patient: {
 
     ${divider()}
     <p style="margin:0;color:#9ca3af;font-size:12px;text-align:center;">
-      Signing in with: <strong>${patient.email}</strong>
+      Registered with: <strong>${patient.email}</strong>
     </p>
   `);
 
   await resend.emails.send({
     from: FROM,
     to: patient.email,
-    subject: 'Your Account is Approved — Dr. Saria El Hachem Patient Portal',
+    subject: 'Registration Successful — Dr. Saria El Hachem Patient Portal',
     html,
   });
 }
 
-// ─── 4. Patient → Account Deactivated ────────────────────────────────────────
+// ─── 2. Patient → Account Deactivated ────────────────────────────────────────
 
 export async function sendDeactivationNotification(patient: {
   first_name: string; last_name: string; email: string;
@@ -238,7 +151,7 @@ export async function sendDeactivationNotification(patient: {
   });
 }
 
-// ─── 5. Password Reset ────────────────────────────────────────────────────────
+// ─── 3. Password Reset ────────────────────────────────────────────────────────
 
 export async function sendPasswordResetEmail(user: {
   first_name: string; email: string;
@@ -276,7 +189,7 @@ export async function sendPasswordResetEmail(user: {
   });
 }
 
-// ─── 6. Patient → New Record Notification ────────────────────────────────────
+// ─── 4. Patient → New Record Notification ────────────────────────────────────
 
 const RECORD_TYPE_LABELS: Record<string, string> = {
   consultation: 'Consultation',
@@ -346,7 +259,7 @@ export async function sendNewRecordNotification(patient: {
   });
 }
 
-// ─── 7. Patient → Account Reactivated ────────────────────────────────────────
+// ─── 5. Patient → Account Reactivated ────────────────────────────────────────
 
 export async function sendReactivationNotification(patient: {
   first_name: string; last_name: string; email: string;

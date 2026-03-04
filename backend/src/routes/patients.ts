@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
 import pool from '../db/database';
 import { authenticate, requireRole, AuthRequest, auditLog } from '../middleware/auth';
-import { sendApprovalNotification, sendDeactivationNotification, sendReactivationNotification } from '../services/email';
+import { sendDeactivationNotification, sendReactivationNotification } from '../services/email';
 
 const router = Router();
 router.use(authenticate);
@@ -21,21 +21,6 @@ router.get('/', requireRole('doctor', 'nurse'), auditLog('list_patients'), async
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to fetch patients' });
-  }
-});
-
-// GET /api/patients/pending - Doctor/Nurse: pending approvals
-router.get('/pending', requireRole('doctor', 'nurse'), async (_req: AuthRequest, res: Response): Promise<void> => {
-  try {
-    const result = await pool.query(`
-      SELECT id, email, first_name, last_name, phone, date_of_birth, gender, created_at
-      FROM users WHERE role = 'patient' AND approved = 0 AND is_active = 1
-      ORDER BY created_at DESC
-    `);
-    res.json(result.rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to fetch pending patients' });
   }
 });
 
@@ -90,48 +75,6 @@ router.get('/:id', auditLog('view_patient'), async (req: AuthRequest, res: Respo
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to fetch patient' });
-  }
-});
-
-// PUT /api/patients/:id/approve - Doctor/Nurse
-router.put('/:id/approve', requireRole('doctor', 'nurse'), async (req: AuthRequest, res: Response): Promise<void> => {
-  try {
-    const patientResult = await pool.query(
-      "SELECT id, email, first_name, last_name FROM users WHERE id = $1 AND role = 'patient'",
-      [req.params.id]
-    );
-    if (patientResult.rows.length === 0) {
-      res.status(404).json({ error: 'Patient not found' });
-      return;
-    }
-    const patient = patientResult.rows[0] as { id: string; email: string; first_name: string; last_name: string };
-    await pool.query('UPDATE users SET approved = 1, updated_at = NOW() WHERE id = $1', [req.params.id]);
-    sendApprovalNotification(patient).catch(e => console.error('Email error (approval):', e));
-    res.json({ message: 'Patient approved successfully' });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to approve patient' });
-  }
-});
-
-// PUT /api/patients/:id/reject - Doctor/Nurse
-router.put('/:id/reject', requireRole('doctor', 'nurse'), async (req: AuthRequest, res: Response): Promise<void> => {
-  try {
-    const patientResult = await pool.query(
-      "SELECT email, first_name, last_name FROM users WHERE id = $1 AND role = 'patient' AND approved = 0",
-      [req.params.id]
-    );
-    if (patientResult.rows.length === 0) {
-      res.status(404).json({ error: 'Pending patient not found' });
-      return;
-    }
-    const patient = patientResult.rows[0] as { email: string; first_name: string; last_name: string };
-    await pool.query('UPDATE users SET is_active = 0, updated_at = NOW() WHERE id = $1', [req.params.id]);
-    sendDeactivationNotification(patient).catch(e => console.error('Email error (rejection):', e));
-    res.json({ message: 'Patient registration rejected' });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to reject patient' });
   }
 });
 

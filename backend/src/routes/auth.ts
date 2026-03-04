@@ -4,7 +4,7 @@ import crypto from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
 import pool from '../db/database';
 import { generateToken, authenticate, AuthRequest } from '../middleware/auth';
-import { sendRegistrationConfirmation, sendNewPatientAlert, sendPasswordResetEmail } from '../services/email';
+import { sendRegistrationConfirmation, sendPasswordResetEmail } from '../services/email';
 
 const router = Router();
 
@@ -49,7 +49,7 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
     const id = uuidv4();
     await pool.query(
       `INSERT INTO users (id, email, password_hash, role, first_name, last_name, phone, date_of_birth, gender, address, emergency_contact, emergency_phone, id_type, id_number, approved)
-       VALUES ($1, $2, $3, 'patient', $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, 0)`,
+       VALUES ($1, $2, $3, 'patient', $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, 1)`,
       [id, email.toLowerCase().trim(), hash, first_name.trim(), last_name.trim(),
        phone || null, date_of_birth || null, gender || null, address || null,
        emergency_contact || null, emergency_phone || null,
@@ -59,10 +59,9 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
     const newPatient = { id, first_name: first_name.trim(), last_name: last_name.trim(), email: email.toLowerCase().trim(), phone: phone || null, date_of_birth: date_of_birth || null, gender: gender || null };
 
     sendRegistrationConfirmation(newPatient).catch(e => console.error('Email error (registration confirmation):', e));
-    sendNewPatientAlert(newPatient).catch(e => console.error('Email error (new patient alert):', e));
 
     res.status(201).json({
-      message: 'Registration successful. Your account is pending approval by Dr. El Hachem. You will be notified by email once activated.',
+      message: 'Registration successful. You can now sign in to access your patient portal.',
       id
     });
   } catch (err) {
@@ -97,10 +96,6 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
 
     if (!user.is_active) {
       res.status(403).json({ error: 'Your account has been deactivated. Please contact the clinic.' });
-      return;
-    }
-    if (user.role === 'patient' && !user.approved) {
-      res.status(403).json({ error: 'Your account is pending approval by Dr. El Hachem. Please check back soon.' });
       return;
     }
 
