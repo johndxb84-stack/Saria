@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { Analytics } from '@vercel/analytics/react';
 
 // Pages
 import HomePage from './pages/HomePage';
@@ -121,6 +122,7 @@ function App() {
 
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        <Analytics />
       </BrowserRouter>
     </AuthProvider>
   );
