@@ -1,0 +1,17 @@
+node_modules
+*/node_modules
+dist
+*/dist
+*.sqlite
+*.db
+.env
+backend/.env
+frontend/.env*
+backend/uploads/*
+!backend/uploads/.gitkeep
+.git
+.gitignore
+.DS_Store
+*.log
+AZURE_SETUP.md
+railway.toml
