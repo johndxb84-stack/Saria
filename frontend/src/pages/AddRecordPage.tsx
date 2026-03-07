@@ -74,23 +74,18 @@ export default function AddRecordPage() {
         fd.append('record_id', res.data.id);
         fd.append('file_category', fileCategory);
         if (fileDescription) fd.append('description', fileDescription);
-        // Delete Content-Type so axios doesn't override the browser's
-        // automatic multipart/form-data boundary for FormData uploads
+        // Set Content-Type to false so Axios removes the instance-level
+        // 'application/json' default, letting the browser set the correct
+        // multipart/form-data boundary for the FormData body.
         await api.post('/files/upload', fd, {
-          transformRequest: [(data: unknown, headers: any) => {
-            // Use AxiosHeaders .delete() method (Axios v1.x) so the header is
-            // reliably removed regardless of internal key casing, allowing the
-            // browser to set the correct multipart/form-data boundary.
-            headers.delete('Content-Type');
-            return data;
-          }],
+          headers: { 'Content-Type': false },
         });
         setUploadLoading(false);
       }
 
       setSuccess(true);
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to save record');
+      setError(err.response?.data?.error || err.message || 'Failed to save record');
     } finally {
       setLoading(false);
     }

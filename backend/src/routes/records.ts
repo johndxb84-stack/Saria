@@ -71,17 +71,16 @@ router.get('/:patientId/summary', async (req: AuthRequest, res: Response): Promi
 
 // POST /api/records - Create a new medical record (doctor/nurse)
 router.post('/', requireRole('doctor', 'nurse'), async (req: AuthRequest, res: Response): Promise<void> => {
-  const {
-    patient_id, record_type, title, description, date,
-    blood_results, prescriptions
-  } = req.body;
-
-  if (!patient_id || !record_type || !title || !date) {
-    res.status(400).json({ error: 'patient_id, record_type, title, and date are required' });
-    return;
-  }
-
   try {
+    const {
+      patient_id, record_type, title, description, date,
+      blood_results, prescriptions
+    } = req.body || {};
+
+    if (!patient_id || !record_type || !title || !date) {
+      res.status(400).json({ error: 'patient_id, record_type, title, and date are required' });
+      return;
+    }
     const patientCheck = await pool.query("SELECT id FROM users WHERE id = $1 AND role = 'patient'", [patient_id]);
     if (patientCheck.rows.length === 0) {
       res.status(404).json({ error: 'Patient not found' });
