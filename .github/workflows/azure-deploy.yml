@@ -26,6 +26,11 @@ jobs:
       #       VITE_API_URL is baked into the React build at this step.
       #       It must point to your Azure App Service URL, e.g.:
       #       https://saria-portal.azurewebsites.net/api
+      - name: Test ACR connectivity
+        run: |
+          nslookup sariaregistry.azurecr.io || echo "nslookup failed"
+          curl -s -o /dev/null -w "HTTP status: %{http_code}\n" https://sariaregistry.azurecr.io/v2/ || echo "curl failed"
+
       - name: Build and push image to ACR
         id: build-image
         env:
