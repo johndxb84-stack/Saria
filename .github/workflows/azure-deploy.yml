@@ -38,9 +38,8 @@ jobs:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
           REGISTRY: ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}
         run: |
-          REGISTRY=$(printf '%s' "$REGISTRY" | sed 's|https://||g' | sed 's|http://||g' | tr -cd '[:alnum:]._-')
+          REGISTRY="sariaregistry.azurecr.io"
           VITE_API_URL=$(printf '%s' "$VITE_API_URL" | tr -d '\n\r')
-          echo "Registry hostname: $REGISTRY"
           docker build \
             --build-arg VITE_API_URL="$VITE_API_URL" \
             -t "$REGISTRY/saria-portal:$IMAGE_TAG" \
