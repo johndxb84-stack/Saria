@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import path from 'path';
 import dotenv from 'dotenv';
@@ -57,6 +57,28 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.join(frontendPath, 'index.html'));
   });
 }
+
+// Global JSON error handler — must be defined after all routes.
+// Ensures errors (including JSON body-parse failures and multer errors)
+// always return a JSON response so the frontend can display them correctly.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+  if (err.code === 'LIMIT_FILE_SIZE') {
+    res.status(400).json({ error: 'File too large. Maximum size is 50MB.' });
+    return;
+  }
+  if (err.message === 'File type not allowed') {
+    res.status(400).json({ error: 'File type not allowed. Please upload a PDF, JPG, PNG, or DICOM file.' });
+    return;
+  }
+  // express.json() parse failures arrive here with err.type === 'entity.parse.failed'
+  if (err.type === 'entity.parse.failed' || err.status === 400) {
+    res.status(400).json({ error: 'Invalid request body.' });
+    return;
+  }
+  console.error('Unhandled error:', err);
+  res.status(err.status || 500).json({ error: err.message || 'An unexpected error occurred.' });
+});
 
 initializeSchema()
   .then(() => {

@@ -77,8 +77,11 @@ export default function AddRecordPage() {
         // Delete Content-Type so axios doesn't override the browser's
         // automatic multipart/form-data boundary for FormData uploads
         await api.post('/files/upload', fd, {
-          transformRequest: [(data: unknown, headers: Record<string, unknown>) => {
-            delete headers['Content-Type'];
+          transformRequest: [(data: unknown, headers: any) => {
+            // Use AxiosHeaders .delete() method (Axios v1.x) so the header is
+            // reliably removed regardless of internal key casing, allowing the
+            // browser to set the correct multipart/form-data boundary.
+            headers.delete('Content-Type');
             return data;
           }],
         });
