@@ -1,0 +1,49 @@
+name: Build & Deploy to Azure (UAE)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # allow manual trigger from GitHub UI
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Checkout ──────────────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2. Log in to Azure Container Registry ───────────────────────────────
+      - name: Login to Azure Container Registry
+        uses: azure/docker-login@v2
+        with:
+          login-server: ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
+          password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
+
+      # ── 3. Build Docker image and push to ACR ───────────────────────────────
+      #       VITE_API_URL is baked into the React build at this step.
+      #       It must point to your Azure App Service URL, e.g.:
+      #       https://saria-portal.azurewebsites.net/api
+      - name: Build and push image to ACR
+        id: build-image
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build \
+            --build-arg VITE_API_URL=${{ secrets.VITE_API_URL }} \
+            -t ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/saria-portal:$IMAGE_TAG \
+            -t ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/saria-portal:latest \
+            .
+          docker push ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/saria-portal:$IMAGE_TAG
+          docker push ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/saria-portal:latest
+          echo "image=${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/saria-portal:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+      # ── 4. Deploy to Azure App Service ───────────────────────────────────────
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+          images: ${{ steps.build-image.outputs.image }}
