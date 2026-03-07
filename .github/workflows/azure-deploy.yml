@@ -30,15 +30,17 @@ jobs:
         id: build-image
         env:
           IMAGE_TAG: ${{ github.sha }}
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          REGISTRY: ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}
         run: |
           docker build \
-            --build-arg VITE_API_URL="${{ secrets.VITE_API_URL }}" \
-            -t ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/saria-portal:$IMAGE_TAG \
-            -t ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/saria-portal:latest \
+            --build-arg VITE_API_URL="$VITE_API_URL" \
+            -t "$REGISTRY/saria-portal:$IMAGE_TAG" \
+            -t "$REGISTRY/saria-portal:latest" \
             .
-          docker push ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/saria-portal:$IMAGE_TAG
-          docker push ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/saria-portal:latest
-          echo "image=${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/saria-portal:$IMAGE_TAG" >> $GITHUB_OUTPUT
+          docker push "$REGISTRY/saria-portal:$IMAGE_TAG"
+          docker push "$REGISTRY/saria-portal:latest"
+          echo "image=$REGISTRY/saria-portal:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
       # ── 4. Deploy to Azure App Service ───────────────────────────────────────
       - name: Deploy to Azure App Service
