@@ -32,7 +32,7 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build \
-            --build-arg VITE_API_URL=${{ secrets.VITE_API_URL }} \
+            --build-arg VITE_API_URL="${{ secrets.VITE_API_URL }}" \
             -t ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/saria-portal:$IMAGE_TAG \
             -t ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/saria-portal:latest \
             .
