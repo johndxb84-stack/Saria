@@ -9,6 +9,7 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [consentGiven, setConsentGiven] = useState(false);
   const [form, setForm] = useState({
     first_name: '', last_name: '', email: '', password: '', confirm_password: '',
     phone: '', date_of_birth: '', gender: '', address: '',
@@ -46,6 +47,10 @@ export default function RegisterPage() {
     }
     if (!form.id_number.trim()) {
       setError(form.is_uae_resident === 'yes' ? 'Emirates ID number is required' : 'Passport number is required');
+      return;
+    }
+    if (!consentGiven) {
+      setError('You must agree to the Privacy Policy and Terms of Service to register.');
       return;
     }
     if (form.is_uae_resident === 'yes' && !/^784-\d{4}-\d{7}-\d$/.test(form.id_number.trim())) {
@@ -285,13 +290,28 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            <div className="bg-sky-400/15 rounded-xl p-4 text-sm text-sky-600 border border-sky-200">
-              <strong>Privacy Notice:</strong> Your medical information is confidential and will only
-              be accessible to you and Dr. El Hachem's authorized medical team. By registering,
-              you consent to Dr. El Hachem managing your health records electronically.
+            {/* Explicit consent — required by UAE PDPL */}
+            <div className={`rounded-xl p-4 border ${consentGiven ? 'bg-sky-50 border-sky-200' : 'bg-gray-50 border-gray-200'} transition-colors`}>
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="mt-0.5 w-4 h-4 rounded border-gray-300 text-sky-600 focus:ring-sky-500 flex-shrink-0 cursor-pointer"
+                  checked={consentGiven}
+                  onChange={e => setConsentGiven(e.target.checked)}
+                />
+                <span className="text-sm text-gray-700 leading-relaxed">
+                  I have read and agree to the{' '}
+                  <Link to="/privacy" target="_blank" className="text-sky-600 font-medium hover:underline">Privacy Policy</Link>
+                  {' '}and{' '}
+                  <Link to="/terms" target="_blank" className="text-sky-600 font-medium hover:underline">Terms of Service</Link>.
+                  I consent to Dr. El Hachem and her authorized medical team accessing and managing my health
+                  records electronically, and to my data being stored securely on servers in the UAE.{' '}
+                  <span className="text-red-500 font-medium">*</span>
+                </span>
+              </label>
             </div>
 
-            <button type="submit" disabled={loading} className="btn-primary w-full py-3 text-base">
+            <button type="submit" disabled={loading || !consentGiven} className="btn-primary w-full py-3 text-base disabled:opacity-50 disabled:cursor-not-allowed">
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
                   <div className="w-4 h-4 border-2 border-gray-300 border-t-white rounded-full animate-spin"></div>

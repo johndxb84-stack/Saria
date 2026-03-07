@@ -122,7 +122,7 @@ export default function HomePage() {
               <div>
                 <div className="inline-flex items-center gap-2 bg-sky-50 border border-sky-200 rounded-full px-4 py-2 text-sm mb-6 text-sky-700 font-medium">
                   <Lock className="w-4 h-4" />
-                  HIPAA-compliant · Encrypted · Private
+                  UAE PDPL Compliant · Encrypted · Private
                 </div>
                 <h2 className="text-3xl lg:text-4xl font-bold mb-4 leading-tight text-gray-900">
                   Your Secure<br />Patient Portal
@@ -163,9 +163,9 @@ export default function HomePage() {
                 <div className="w-16 h-16 bg-sky-50 border border-sky-200 rounded-2xl flex items-center justify-center mb-5">
                   <Lock className="w-8 h-8 text-sky-600" />
                 </div>
-                <div className="text-lg font-bold text-gray-900 mb-2">End-to-End Encrypted</div>
+                <div className="text-lg font-bold text-gray-900 mb-2">Encrypted & Secure</div>
                 <div className="text-sm text-gray-500 leading-relaxed mb-5 max-w-xs">
-                  Your medical data is protected with 256-bit AES encryption. Only you and Dr. El Hachem's authorized team can access it.
+                  Your medical data is encrypted in transit and at rest. Only you and Dr. El Hachem's authorized team can access it.
                 </div>
                 <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-200 rounded-full px-4 py-1.5">
                   <div className="w-2 h-2 rounded-full bg-emerald-500" />
@@ -305,10 +305,17 @@ export default function HomePage() {
                 <span className="text-gray-400 text-xs">Jumeirah American Clinic · Dubai, UAE</span>
               </div>
             </div>
-            <p className="text-xs text-gray-500 text-center">
-              © {new Date().getFullYear()} Dr. Saria El Hachem · Family Medicine · Dubai, UAE
-              · All patient data is protected and confidential
-            </p>
+            <div className="text-center">
+              <p className="text-xs text-gray-500">
+                © {new Date().getFullYear()} Dr. Saria El Hachem · Family Medicine · Dubai, UAE
+                · All patient data is protected and confidential
+              </p>
+              <div className="flex items-center justify-center gap-4 mt-2">
+                <Link to="/privacy" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">Privacy Policy</Link>
+                <span className="text-gray-700">·</span>
+                <Link to="/terms" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">Terms of Service</Link>
+              </div>
+            </div>
             <div className="flex items-center gap-4">
               <a
                 href="https://www.instagram.com/drsariahachem/"
@@ -321,7 +328,7 @@ export default function HomePage() {
               </a>
               <div className="flex items-center gap-1.5 text-xs text-gray-500">
                 <Lock className="w-3 h-3" />
-                <span>HIPAA Compliant</span>
+                <span>UAE PDPL Compliant</span>
               </div>
             </div>
           </div>
