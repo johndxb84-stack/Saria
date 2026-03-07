@@ -4,7 +4,7 @@ import crypto from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
 import pool from '../db/database';
 import { generateToken, authenticate, AuthRequest } from '../middleware/auth';
-import { sendRegistrationConfirmation, sendPasswordResetEmail } from '../services/email';
+import { sendRegistrationConfirmation, sendPasswordResetEmail, sendNewPatientAlert } from '../services/email';
 
 const router = Router();
 
@@ -53,6 +53,14 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
     const newPatient = { id, first_name: first_name.trim(), last_name: last_name.trim(), email: email.toLowerCase().trim(), phone: phone || null, date_of_birth: date_of_birth || null, gender: gender || null };
 
     sendRegistrationConfirmation(newPatient).catch(e => console.error('Email error (registration confirmation):', e));
+
+    // Alert all staff (doctors + nurses) about the new patient
+    pool.query("SELECT email FROM users WHERE role IN ('doctor', 'nurse') AND is_active = 1")
+      .then(r => {
+        const staffEmails = (r.rows as { email: string }[]).map(u => u.email);
+        return sendNewPatientAlert(staffEmails, { ...newPatient, id_type, id_number: id_number.trim(), phone: phone || null });
+      })
+      .catch(e => console.error('Email error (new patient staff alert):', e));
 
     res.status(201).json({
       message: 'Registration successful. You can now sign in to access your patient portal.',

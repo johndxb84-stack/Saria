@@ -259,7 +259,49 @@ export async function sendNewRecordNotification(patient: {
   });
 }
 
-// ─── 5. Patient → Account Reactivated ────────────────────────────────────────
+// ─── 5. Staff → New Patient Registered ───────────────────────────────────────
+
+export async function sendNewPatientAlert(
+  staffEmails: string[],
+  patient: { first_name: string; last_name: string; email: string; phone: string | null; id_type: string; id_number: string; }
+): Promise<void> {
+  if (!process.env.RESEND_API_KEY || staffEmails.length === 0) return;
+
+  const idLabel = patient.id_type === 'eid' ? 'Emirates ID' : 'Passport';
+
+  const html = layout(`
+    <div style="text-align:center;margin-bottom:28px;">
+      <div style="display:inline-block;background:#eff6ff;border-radius:50%;width:60px;height:60px;line-height:60px;font-size:28px;margin-bottom:12px;">👤</div>
+      <h2 style="margin:0 0 8px;color:#111827;font-size:20px;font-weight:700;">New Patient Registered</h2>
+      <p style="margin:0;color:#6b7280;font-size:14px;">A new patient has signed up on the portal</p>
+    </div>
+
+    <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:20px;margin-bottom:24px;">
+      <table style="width:100%;border-collapse:collapse;">
+        ${infoRow('Name', `${patient.first_name} ${patient.last_name}`)}
+        ${infoRow('Email', patient.email)}
+        ${infoRow('Phone', patient.phone || '—')}
+        ${infoRow(idLabel, patient.id_number)}
+      </table>
+    </div>
+
+    ${button('View Patient in Portal', `${PORTAL_URL}/login`, '#2563eb')}
+
+    ${divider()}
+    <p style="margin:0;color:#9ca3af;font-size:12px;text-align:center;">
+      This alert was sent to all clinic staff.
+    </p>
+  `);
+
+  await resend.emails.send({
+    from: FROM,
+    to: staffEmails,
+    subject: `New Patient: ${patient.first_name} ${patient.last_name} — Dr. Saria El Hachem Portal`,
+    html,
+  });
+}
+
+// ─── 6. Patient → Account Reactivated ────────────────────────────────────────
 
 export async function sendReactivationNotification(patient: {
   first_name: string; last_name: string; email: string;
