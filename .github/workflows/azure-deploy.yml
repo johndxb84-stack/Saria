@@ -38,7 +38,7 @@ jobs:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
           REGISTRY: ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}
         run: |
-          REGISTRY=$(printf '%s' "$REGISTRY" | tr -cd '[:alnum:]._-' | sed 's|https://||g' | sed 's|http://||g')
+          REGISTRY=$(printf '%s' "$REGISTRY" | sed 's|https://||g' | sed 's|http://||g' | tr -cd '[:alnum:]._-')
           VITE_API_URL=$(printf '%s' "$VITE_API_URL" | tr -d '\n\r')
           echo "Registry hostname: $REGISTRY"
           docker build \
