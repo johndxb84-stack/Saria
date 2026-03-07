@@ -84,14 +84,9 @@ export default function RegisterPage() {
           <div className="w-16 h-16 bg-green-400/20 rounded-full flex items-center justify-center mx-auto mb-4">
             <CheckCircle className="w-8 h-8 text-emerald-600" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-3">Registration Submitted!</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-3">Registration Successful!</h2>
           <p className="text-gray-500 mb-6">
-            Thank you for registering. Your account is <strong>pending review</strong> by
-            Dr. El Hachem. Once approved, you will be able to sign in and access your
-            medical records.
-          </p>
-          <p className="text-sm text-gray-500 mb-6">
-            Please contact the clinic if you need urgent access.
+            You have been successfully registered. You can now sign in and access your medical records.
           </p>
           <button onClick={() => navigate('/login')} className="btn-primary w-full py-3">
             Go to Sign In
