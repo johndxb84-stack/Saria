@@ -89,9 +89,21 @@ export default function NurseDashboard() {
                       <p className="text-xs text-gray-400 truncate">{p.email}</p>
                     </div>
                   </div>
-                  {p.date_of_birth && (
-                    <p className="text-xs text-gray-500 mb-3">DOB: {p.date_of_birth} · {p.gender}</p>
-                  )}
+                  <div className="mb-3 space-y-0.5">
+                    {p.date_of_birth && (
+                      <p className="text-xs text-gray-500">DOB: {p.date_of_birth}{p.gender ? ` · ${p.gender}` : ''}</p>
+                    )}
+                    {p.id_number && (
+                      <p className="text-xs text-gray-500">
+                        <span className="uppercase text-gray-400">{p.id_type || 'ID'}: </span>{p.id_number}
+                      </p>
+                    )}
+                    {(p.emergency_contact || p.emergency_phone) && (
+                      <p className="text-xs text-orange-500">
+                        Emergency: {p.emergency_contact}{p.emergency_contact && p.emergency_phone ? ' · ' : ''}{p.emergency_phone}
+                      </p>
+                    )}
+                  </div>
                   <div className="flex gap-2">
                     <Link
                       to={`/nurse/patients/${p.id}`}

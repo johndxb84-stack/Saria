@@ -13,7 +13,7 @@ router.get('/', requireRole('doctor', 'nurse'), auditLog('list_patients'), async
   try {
     const result = await pool.query(`
       SELECT id, email, first_name, last_name, phone, date_of_birth, gender, address,
-             emergency_contact, emergency_phone, is_active, approved, created_at
+             emergency_contact, emergency_phone, id_type, id_number, is_active, approved, created_at
       FROM users WHERE role = 'patient'
       ORDER BY last_name, first_name
     `);
@@ -29,7 +29,7 @@ router.get('/me', async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const result = await pool.query(`
       SELECT id, email, first_name, last_name, phone, date_of_birth, gender, address,
-             emergency_contact, emergency_phone, created_at
+             emergency_contact, emergency_phone, id_type, id_number, created_at
       FROM users WHERE id = $1
     `, [req.user!.id]);
     res.json(result.rows[0]);
@@ -66,7 +66,7 @@ router.get('/:id', auditLog('view_patient'), async (req: AuthRequest, res: Respo
   try {
     const result = await pool.query(`
       SELECT id, email, first_name, last_name, phone, date_of_birth, gender, address,
-             emergency_contact, emergency_phone, is_active, approved, created_at
+             emergency_contact, emergency_phone, id_type, id_number, is_active, approved, created_at
       FROM users WHERE id = $1 AND role = 'patient'
     `, [id]);
     if (result.rows.length === 0) {

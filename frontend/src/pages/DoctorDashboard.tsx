@@ -288,8 +288,9 @@ export default function DoctorDashboard() {
                   <tr className="text-left border-b border-gray-100">
                     <th className="pb-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Patient</th>
                     <th className="pb-3 text-xs font-semibold text-gray-500 uppercase tracking-wide hidden sm:table-cell">Contact</th>
+                    <th className="pb-3 text-xs font-semibold text-gray-500 uppercase tracking-wide hidden lg:table-cell">ID</th>
                     <th className="pb-3 text-xs font-semibold text-gray-500 uppercase tracking-wide hidden lg:table-cell">DOB</th>
-                    <th className="pb-3 text-xs font-semibold text-gray-500 uppercase tracking-wide hidden lg:table-cell">Gender</th>
+                    <th className="pb-3 text-xs font-semibold text-gray-500 uppercase tracking-wide hidden xl:table-cell">Gender</th>
                     <th className="pb-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Actions</th>
                   </tr>
                 </thead>
@@ -310,11 +311,26 @@ export default function DoctorDashboard() {
                       <td className="py-3 pr-4 hidden sm:table-cell">
                         <p className="text-sm text-gray-700">{p.email}</p>
                         {p.phone && <p className="text-xs text-gray-400">{p.phone}</p>}
+                        {(p.emergency_contact || p.emergency_phone) && (
+                          <p className="text-xs text-orange-500 mt-0.5">
+                            Emergency: {p.emergency_contact}{p.emergency_contact && p.emergency_phone ? ' · ' : ''}{p.emergency_phone}
+                          </p>
+                        )}
+                      </td>
+                      <td className="py-3 pr-4 hidden lg:table-cell">
+                        {p.id_number ? (
+                          <>
+                            <p className="text-xs text-gray-400 uppercase">{p.id_type || 'ID'}</p>
+                            <p className="text-sm text-gray-700 font-mono">{p.id_number}</p>
+                          </>
+                        ) : (
+                          <p className="text-sm text-gray-400">—</p>
+                        )}
                       </td>
                       <td className="py-3 pr-4 hidden lg:table-cell">
                         <p className="text-sm text-gray-600">{p.date_of_birth || '—'}</p>
                       </td>
-                      <td className="py-3 pr-4 hidden lg:table-cell">
+                      <td className="py-3 pr-4 hidden xl:table-cell">
                         <p className="text-sm text-gray-600 capitalize">{p.gender || '—'}</p>
                       </td>
                       <td className="py-3">

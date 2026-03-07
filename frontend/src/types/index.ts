@@ -20,6 +20,8 @@ export interface User {
   address?: string;
   emergency_contact?: string;
   emergency_phone?: string;
+  id_type?: string;
+  id_number?: string;
   is_active?: number;
   approved?: number;
   created_at?: string;
